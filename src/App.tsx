@@ -1,12 +1,36 @@
 import { useState, useRef, useEffect } from 'react';
-import { DraftingCompass } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import Logo from "./assets/Muscle Fatigue Signal Trainer.svg?react";
 
 const SIDE_BAR_MIN_WIDTH = 250;
 const SIDE_BAR_MAX_WIDTH = 350;
 const SIDE_BAR_DEFAULT_WIDTH = 280;
 
+// fill-gray-50	fill: #f9fafb;
+// fill-gray-100	fill: #f3f4f6;
+// fill-gray-200	fill: #e5e7eb;
+// fill-gray-300	fill: #d1d5db;
+// fill-gray-400	fill: #9ca3af;
+// fill-gray-500	fill: #6b7280;
+// fill-gray-600	fill: #4b5563;
+// fill-gray-700	fill: #374151;
+// fill-gray-800	fill: #1f2937;
+// fill-gray-900	fill: #111827;
+// fill-gray-950	fill: #030712;
+
+// text-xs	font-size: 0.75rem; /* 12px */ line-height: 1rem; /* 16px */
+// text-sm	font-size: 0.875rem; /* 14px */ line-height: 1.25rem; /* 20px */
+// text-base	font-size: 1rem; /* 16px */ line-height: 1.5rem; /* 24px */
+// text-lg	font-size: 1.125rem; /* 18px */  line-height: 1.75rem; /* 28px */
+// text-xl	font-size: 1.25rem; /* 20px */ line-height: 1.75rem; /* 28px */
+// text-2xl	font-size: 1.5rem; /* 24px */ line-height: 2rem; /* 32px */
+// text-3xl	font-size: 1.875rem; /* 30px */ line-height: 2.25rem; /* 36px */
+// text-4xl	font-size: 2.25rem; /* 36px */ line-height: 2.5rem; /* 40px */
+// text-5xl	font-size: 3rem; /* 48px */ line-height: 1;
+// text-6xl	font-size: 3.75rem; /* 60px */ line-height: 1;
+
 function App() {
-  const [count, setCount] = useState(0);
+  // const [count, setCount] = useState(0);
   const [sidebarWidth, setSidebarWidth] = useState(SIDE_BAR_DEFAULT_WIDTH);
   const isDragging = useRef(false);
 
@@ -34,6 +58,28 @@ function App() {
     document.body.classList.remove('select-none'); // Enable text selection
   };
 
+  const retrieveRecentResults = () => {
+    return [
+      {
+        id: 1,
+        folder: '.../muscle_fatigue_isometric_elbow_flexion',
+        modified: '2024-09-01',
+      },
+      {
+        id: 2,
+        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy',
+        modified: '2024-10-01',
+      },
+      {
+        id: 3,
+        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
+        modified: '2024-10-01',
+      },
+    ]
+  }
+
+  const recentResults = retrieveRecentResults();
+
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseMoveDivider);
     document.addEventListener('mouseup', handleMouseUpDivider);
@@ -47,7 +93,7 @@ function App() {
     <div className="min-h-screen bg-gradient-to-b from-white from-70% to-gray-200 flex flex-row items-normal justify-center divide-x-[1px] py-2">
       <div
         style={{ width: `${sidebarWidth}px`, }}
-        className={`min-w-[${SIDE_BAR_MIN_WIDTH}px] px-4 py-2 relative`}
+        className={`min-w-[${SIDE_BAR_MIN_WIDTH}px] px-4 py-2 relative flex-none`}
       >
         Sidebar
         <div 
@@ -58,19 +104,40 @@ function App() {
         </div>
       </div>
       <div className="flex-1 flex flex-col justify-around">
-        <div className="px-8 pt-8 pb-12 space-y-4 text-center">
-          <div className="text-xl flex items-center justify-center">
-            This is my app <DraftingCompass className="ml-2 text-blue-500" />
-          </div>
-          <button
-            className="rounded-lg px-5 py-2 text-base bg-gray-300 cursor-pointer transition-colors duration-200 hover:bg-gray-200"
-            onClick={() => setCount((count) => count + 1)}
-          >
-            count is {count}
-          </button>
-          <p className="text-sm text-gray-500">
-            Edit <code>src/App.tsx</code> and save to test HMR
+        <div className="px-8 pt-8 pb-12 space-y-3 text-center">
+          <h1 className="text-xl flex items-center justify-center">
+            <Logo width={300} height={``} fill={'#111827'}/>
+          </h1>
+          <h2 className="font-extralight text-sm">
+          A training tool for ML prediction of muscle fatigue signals
+          </h2>
+          <p className="font-extralight text-base text-gray-300">
+            by Franz Chuquirachi
           </p>
+          <h3 className="font-light text-sm text-left">
+            Recent projects
+          </h3>
+          <div className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 overflow-y-auto">
+            {recentResults.map((recentResults) => (
+              <div 
+                key={recentResults.id.toString()}
+                className="flex flex-row flex-nowrap space-x-2 items-center p-4 hover:bg-gray-200 transition-colors duration-300"
+              >
+                <h3 className="flex-auto basis-3/5 font-light text-sm text-left overflow-hidden whitespace-nowrap">
+                  {recentResults.folder}
+                </h3>
+                <h3 className="flex-initial basis-1/5 font-light text-sm text-left overflow-hidden whitespace-nowrap">
+                  {recentResults.modified}
+                </h3>
+                <Trash2 className="flex-initial text-gray-400 hover:text-gray-100 transition-colors duration-100" size={16} />
+              </div>
+            )
+            )}
+          </div>
+          {/* 
+          TODO: Create column headers
+          TODO: Modify minimun dimensions of the windows and change overflow to hidden
+           */}
         </div>
       </div>
     </div>
