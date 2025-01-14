@@ -114,29 +114,39 @@ function App() {
           <p className="font-extralight text-base text-gray-300">
             by Franz Chuquirachi
           </p>
-          <h3 className="font-light text-sm text-left">
+          <h3 className="font-light text-xs text-left">
             Recent projects
           </h3>
           <div className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 overflow-y-auto">
+            <div className="flex flex-row flex-nowrap space-x-2 items-center px-4 pb-1 pt-2">
+              <h3 className="flex-auto basis-3/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
+                Folder Name
+              </h3>
+              <h3 className="flex-initial basis-1/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
+                Modified
+              </h3>
+              <h3 className="flex-initial basis-[6%] font-extralight text-[0.7rem] text-center overflow-hidden whitespace-nowrap">
+                Action
+              </h3>
+            </div>
             {recentResults.map((recentResults) => (
               <div 
                 key={recentResults.id.toString()}
                 className="flex flex-row flex-nowrap space-x-2 items-center p-4 hover:bg-gray-200 transition-colors duration-300"
               >
-                <h3 className="flex-auto basis-3/5 font-light text-sm text-left overflow-hidden whitespace-nowrap">
+                <h3 className="flex-auto basis-3/5 font-light text-xs text-left overflow-hidden whitespace-nowrap">
                   {recentResults.folder}
                 </h3>
-                <h3 className="flex-initial basis-1/5 font-light text-sm text-left overflow-hidden whitespace-nowrap">
+                <h3 className="flex-initial basis-1/5 font-light text-xs text-left overflow-hidden whitespace-nowrap">
                   {recentResults.modified}
                 </h3>
-                <Trash2 className="flex-initial text-gray-400 hover:text-gray-100 transition-colors duration-100" size={16} />
+                <Trash2 className="flex-initial basis-[6%] text-gray-400 hover:text-gray-100 transition-colors duration-100" size={16} />
               </div>
             )
             )}
           </div>
           {/* 
-          TODO: Create column headers
-          TODO: Modify minimun dimensions of the windows and change overflow to hidden
+          TODO: Add elements of sidebar
            */}
         </div>
       </div>
