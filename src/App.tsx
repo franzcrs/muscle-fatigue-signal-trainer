@@ -30,9 +30,19 @@ const SIDE_BAR_DEFAULT_WIDTH = 280;
 // text-6xl	font-size: 3.75rem; /* 60px */ line-height: 1;
 
 function App() {
-  // const [count, setCount] = useState(0);
+  // Sidebar width adjustment variables
   const [sidebarWidth, setSidebarWidth] = useState(SIDE_BAR_DEFAULT_WIDTH);
   const isDragging = useRef(false);
+  // Recent projects chart scroll variables
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const thumbRef = useRef<HTMLDivElement>(null);
+  const [thumbHeight, setThumbHeight] = useState(0);
+  const [thumbTop, setThumbTop] = useState(0);
+  // Custom thumb drag variables
+  const isDraggingThumb = useRef(false);
+  const draggableLength = useRef(0);
+  const dragStartY = useRef(0);
+  const dragStartScrollTop = useRef(0);
 
   const handleMouseDownDivider = () => {
     isDragging.current = true;
@@ -75,6 +85,26 @@ function App() {
         folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
         modified: '2024-10-01',
       },
+      {
+        id: 4,
+        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
+        modified: '2024-10-01',
+      },
+      {
+        id: 5,
+        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
+        modified: '2024-10-01',
+      },
+      {
+        id: 6,
+        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
+        modified: '2024-10-01',
+      },
+      {
+        id: 7,
+        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
+        modified: '2024-10-01',
+      },
     ]
   }
 
@@ -89,8 +119,82 @@ function App() {
     };
   }, []);
 
+  // Handle Scroll of Recent Projects Chart
+  const handleScroll = () => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const newThumbTop = scrollTop + (scrollTop / scrollHeight) * clientHeight;
+      setTimeout(() => {
+        setThumbTop(newThumbTop);
+      }, 1);
+    }
+  };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const { scrollHeight, clientHeight } = container;
+      const thumbHeightCalc = (clientHeight / scrollHeight) * clientHeight;
+      setThumbHeight(thumbHeightCalc);
+      draggableLength.current = clientHeight - thumbHeightCalc;
+      console.log("thumbHeight", thumbHeightCalc);
+
+      container.addEventListener('scroll', handleScroll);
+      handleScroll(); // Initial calculation
+    }
+    return () => {
+      const container = scrollContainerRef.current;
+      if (container) {
+        container.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
+  // Handle Drag of Custom Thumb
+  const handleMouseDownThumb = (e:MouseEvent) => {
+    e.preventDefault();
+    if (!isDraggingThumb.current) {
+      dragStartY.current = e.clientY;
+      // if (dragStartY.current) console.log("dragStartY.current", dragStartY.current);
+      const container = scrollContainerRef.current;
+      if (container) { dragStartScrollTop.current = container.scrollTop; }
+    }
+    isDraggingThumb.current = true;
+    document.body.classList.add('select-none'); // Disable text selection
+  };
+
+  const handleMouseMoveThumb = (e: MouseEvent) => {
+    if (!isDraggingThumb.current) return;
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const { scrollHeight, clientHeight } = container;
+    const draggedVector = e.clientY - dragStartY.current;
+    // console.log("dragStartY", dragStartY.current);
+    // console.log("draggedVector", draggedVector);
+
+    const newScrollTop = dragStartScrollTop.current + draggedVector * (scrollHeight / clientHeight);
+    container.scrollTop = newScrollTop;
+  };
+
+  const handleMouseUpThumb = () => {
+    if (isDraggingThumb.current) {
+      isDraggingThumb.current = false;
+      document.body.classList.remove('select-none'); // Enable text selection
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousemove', handleMouseMoveThumb);
+    document.addEventListener('mouseup', handleMouseUpThumb);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMoveThumb);
+      document.removeEventListener('mouseup', handleMouseUpThumb);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white from-70% to-gray-200 flex flex-row items-normal justify-center divide-x-[1px] py-2">
+    <div className="min-h-screen bg-gradient-to-b from-white from-80% to-gray-100 flex flex-row items-normal justify-center divide-x-[1px] py-2">
       <div
         style={{ width: `${sidebarWidth}px`, }}
         className={`min-w-[${SIDE_BAR_MIN_WIDTH}px] px-4 py-2 relative flex-none`}
@@ -106,7 +210,7 @@ function App() {
       <div className="flex-1 flex flex-col justify-around">
         <div className="px-8 pt-8 pb-12 space-y-3 text-center">
           <h1 className="text-xl flex items-center justify-center">
-            <Logo width={300} height={``} fill={'#111827'}/>
+            <Logo width={300} fill={'#111827'}/>
           </h1>
           <h2 className="font-extralight text-sm">
           A training tool for ML prediction of muscle fatigue signals
@@ -117,20 +221,29 @@ function App() {
           <h3 className="font-light text-xs text-left">
             Recent projects
           </h3>
-          <div className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 overflow-y-auto">
-            <div className="flex flex-row flex-nowrap space-x-2 items-center px-4 pb-1 pt-2">
-              <h3 className="flex-auto basis-3/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
+          <div 
+          id="recent-projects-chart"
+          ref={scrollContainerRef}
+          className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 overflow-y-auto min-h-[40dvh] max-h-[45vh] relative
+          pr-[11px]"
+          >
+            <div 
+            id="recent-projects-header"
+            className="flex flex-row flex-nowrap space-x-2 items-center px-4 pb-1 pt-2"
+            >
+              <div className="flex-auto basis-3/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
                 Folder Name
-              </h3>
-              <h3 className="flex-initial basis-1/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
+              </div>
+              <div className="flex-initial basis-1/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
                 Modified
-              </h3>
-              <h3 className="flex-initial basis-[6%] font-extralight text-[0.7rem] text-center overflow-hidden whitespace-nowrap">
+              </div>
+              <div className="flex-initial basis-[6%] font-extralight text-[0.7rem] text-center overflow-hidden whitespace-nowrap">
                 Action
-              </h3>
+              </div>
             </div>
             {recentResults.map((recentResults) => (
               <div 
+                id="recent-projects-item"
                 key={recentResults.id.toString()}
                 className="flex flex-row flex-nowrap space-x-2 items-center p-4 hover:bg-gray-200 transition-colors duration-300"
               >
@@ -144,8 +257,16 @@ function App() {
               </div>
             )
             )}
+            <div 
+              id="custom-thumb"
+              ref={thumbRef}
+              style={{ height:`${thumbHeight-6}px`, top: `${thumbTop+3.5}px`, }}
+              className="absolute top-0 right-[2.5px] w-[6px] rounded-full bg-gray-200 cursor-pointer"
+              onMouseDown={handleMouseDownThumb}>
+            </div>
           </div>
           {/* 
+          TODO: Update thumb height upon change of clientHeight
           TODO: Add elements of sidebar
            */}
         </div>
