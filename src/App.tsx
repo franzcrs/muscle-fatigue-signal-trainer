@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
 import Logo from "./assets/Muscle Fatigue Signal Trainer.svg?react";
+import CustomYScrollContainer from './components/CustomYScrollContainer';
 
 const SIDE_BAR_MIN_WIDTH = 250;
 const SIDE_BAR_MAX_WIDTH = 350;
@@ -34,14 +35,14 @@ function App() {
   const [sidebarWidth, setSidebarWidth] = useState(SIDE_BAR_DEFAULT_WIDTH);
   const isDragging = useRef(false);
   // Recent projects chart scroll variables
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const thumbRef = useRef<HTMLDivElement>(null);
-  const [thumbHeight, setThumbHeight] = useState(0);
-  const [thumbTop, setThumbTop] = useState(0);
+  // const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // const thumbRef = useRef<HTMLDivElement>(null);
+  // const [thumbHeight, setThumbHeight] = useState(0);
+  // const [thumbTop, setThumbTop] = useState(0);
   // Custom thumb drag variables
-  const isDraggingThumb = useRef(false);
-  const dragStartY = useRef(0);
-  const dragStartScrollTop = useRef(0);
+  // const isDraggingThumb = useRef(false);
+  // const dragStartY = useRef(0);
+  // const dragStartScrollTop = useRef(0);
 
   const handleMouseDownDivider = () => {
     isDragging.current = true;
@@ -119,93 +120,93 @@ function App() {
   }, []);
 
   // Handle Scroll of Recent Projects Chart
-  const handleScroll = () => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const newThumbTop = scrollTop + (scrollTop / scrollHeight) * clientHeight;
-      console.log("newThumbTop", newThumbTop);
-      setTimeout(() => {
-        setThumbTop(newThumbTop);
-      }, 1);
-    }
-  };
+  // const handleScroll = () => {
+  //   const container = scrollContainerRef.current;
+  //   if (container) {
+  //     const { scrollTop, scrollHeight, clientHeight } = container;
+  //     const newThumbTop = scrollTop + (scrollTop / scrollHeight) * clientHeight;
+  //     console.log("newThumbTop", newThumbTop);
+  //     setTimeout(() => {
+  //       setThumbTop(newThumbTop);
+  //     }, 1);
+  //   }
+  // };
 
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      console.log("useEffect", "handleScroll");
-      console.log("scrollTop", scrollTop, "scrollHeight", scrollHeight, "clientHeight", clientHeight);
-      container.addEventListener('scroll', handleScroll);
-    }
-    return () => {
-      const container = scrollContainerRef.current;
-      if (container) {
-        container.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   const container = scrollContainerRef.current;
+  //   if (container) {
+  //     const { scrollTop, scrollHeight, clientHeight } = container;
+  //     console.log("useEffect", "handleScroll");
+  //     console.log("scrollTop", scrollTop, "scrollHeight", scrollHeight, "clientHeight", clientHeight);
+  //     container.addEventListener('scroll', handleScroll);
+  //   }
+  //   return () => {
+  //     const container = scrollContainerRef.current;
+  //     if (container) {
+  //       container.removeEventListener('scroll', handleScroll);
+  //     }
+  //   };
+  // }, []);
 
    // Calculation of thumb height
-   const calculateThumbHeight = () => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      const { scrollHeight, clientHeight } = container;
-      const newThumbHeight = (clientHeight / scrollHeight) * clientHeight;
-      setThumbHeight(newThumbHeight);
-      console.log("thumbHeight", newThumbHeight);
-    }
-  }
+  //  const calculateThumbHeight = () => {
+  //   const container = scrollContainerRef.current;
+  //   if (container) {
+  //     const { scrollHeight, clientHeight } = container;
+  //     const newThumbHeight = (clientHeight / scrollHeight) * clientHeight;
+  //     setThumbHeight(newThumbHeight);
+  //     console.log("thumbHeight", newThumbHeight);
+  //   }
+  // }
 
-  useEffect(() => {
-    console.log("useEffect", "calculateThumbHeight");
-    calculateThumbHeight();
-    window.addEventListener("resize", calculateThumbHeight);
-    return () => {
-      window.removeEventListener("resize", calculateThumbHeight);
-    }
-  }, []);
+  // useEffect(() => {
+  //   console.log("useEffect", "calculateThumbHeight");
+  //   calculateThumbHeight();
+  //   window.addEventListener("resize", calculateThumbHeight);
+  //   return () => {
+  //     window.removeEventListener("resize", calculateThumbHeight);
+  //   }
+  // }, []);
 
   // Handle Drag of Custom Thumb
-  const handleMouseDownThumb = (e:MouseEvent) => {
-    e.preventDefault();
-    if (!isDraggingThumb.current) {
-      dragStartY.current = e.clientY;
-      // if (dragStartY.current) console.log("dragStartY.current", dragStartY.current);
-      const container = scrollContainerRef.current;
-      if (container) { dragStartScrollTop.current = container.scrollTop; }
-    }
-    isDraggingThumb.current = true;
-    document.body.classList.add('select-none'); // Disable text selection
-  };
+  // const handleMouseDownThumb = (e:MouseEvent) => {
+  //   e.preventDefault();
+  //   if (!isDraggingThumb.current) {
+  //     dragStartY.current = e.clientY;
+  //     // if (dragStartY.current) console.log("dragStartY.current", dragStartY.current);
+  //     const container = scrollContainerRef.current;
+  //     if (container) { dragStartScrollTop.current = container.scrollTop; }
+  //   }
+  //   isDraggingThumb.current = true;
+  //   document.body.classList.add('select-none'); // Disable text selection
+  // };
 
-  const handleMouseMoveThumb = (e: MouseEvent) => {
-    if (!isDraggingThumb.current) return;
-    const container = scrollContainerRef.current;
-    if (!container) return;
-    const { scrollHeight, clientHeight } = container;
-    const draggedVector = e.clientY - dragStartY.current;
+  // const handleMouseMoveThumb = (e: MouseEvent) => {
+  //   if (!isDraggingThumb.current) return;
+  //   const container = scrollContainerRef.current;
+  //   if (!container) return;
+  //   const { scrollHeight, clientHeight } = container;
+  //   const draggedVector = e.clientY - dragStartY.current;
 
-    const newScrollTop = dragStartScrollTop.current + draggedVector * (scrollHeight / clientHeight);
-    container.scrollTop = newScrollTop;
-  };
+  //   const newScrollTop = dragStartScrollTop.current + draggedVector * (scrollHeight / clientHeight);
+  //   container.scrollTop = newScrollTop;
+  // };
 
-  const handleMouseUpThumb = () => {
-    if (isDraggingThumb.current) {
-      isDraggingThumb.current = false;
-      document.body.classList.remove('select-none'); // Enable text selection
-    }
-  };
+  // const handleMouseUpThumb = () => {
+  //   if (isDraggingThumb.current) {
+  //     isDraggingThumb.current = false;
+  //     document.body.classList.remove('select-none'); // Enable text selection
+  //   }
+  // };
 
-  useEffect(() => {
-    document.addEventListener('mousemove', handleMouseMoveThumb);
-    document.addEventListener('mouseup', handleMouseUpThumb);
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMoveThumb);
-      document.removeEventListener('mouseup', handleMouseUpThumb);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener('mousemove', handleMouseMoveThumb);
+  //   document.addEventListener('mouseup', handleMouseUpThumb);
+  //   return () => {
+  //     document.removeEventListener('mousemove', handleMouseMoveThumb);
+  //     document.removeEventListener('mouseup', handleMouseUpThumb);
+  //   };
+  // }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white from-80% to-gray-100 flex flex-row items-normal justify-center divide-x-[1px] py-2">
@@ -235,7 +236,8 @@ function App() {
           <h3 className="font-light text-xs text-left">
             Recent projects
           </h3>
-          <div 
+
+          {/* <div 
           id="recent-projects-chart"
           ref={scrollContainerRef}
           className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 overflow-y-auto min-h-[40dvh] max-h-[45vh] relative overscroll-none
@@ -279,9 +281,45 @@ function App() {
               onMouseDown={handleMouseDownThumb}
             >
             </div>
-          </div>
+          </div> */}
+          
+          <CustomYScrollContainer
+          id="recent-projects-chart"
+          className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 min-h-[40dvh] max-h-[45vh] overflow-y-auto"
+          >
+            <div 
+            id="recent-projects-header"
+            className="flex flex-row flex-nowrap space-x-2 items-center px-4 pb-1 pt-2"
+            >
+              <div className="flex-auto basis-3/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
+                Folder Name
+              </div>
+              <div className="flex-initial basis-1/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
+                Modified
+              </div>
+              <div className="flex-initial basis-[6%] font-extralight text-[0.7rem] text-center overflow-hidden whitespace-nowrap">
+                Action
+              </div>
+            </div>
+            {recentResults.map((recentResults) => (
+              <div 
+                id="recent-projects-item"
+                key={recentResults.id.toString()}
+                className="flex flex-row flex-nowrap space-x-2 items-center p-4 hover:bg-gray-200 transition-colors duration-300"
+              >
+                <h3 className="flex-auto basis-3/5 font-light text-xs text-left overflow-hidden whitespace-nowrap">
+                  {recentResults.folder}
+                </h3>
+                <h3 className="flex-initial basis-1/5 font-light text-xs text-left overflow-hidden whitespace-nowrap">
+                  {recentResults.modified}
+                </h3>
+                <Trash2 className="flex-initial basis-[6%] text-gray-400 hover:text-gray-100 transition-colors duration-100" size={16} />
+              </div>
+            )
+            )}
+          </CustomYScrollContainer>
+
           {/* 
-          TODO: Update thumb height upon change of clientHeight
           TODO: Transform custom thumb to an automatic feature when scrollHeight is greater than clientHeight
           TODO: Add elements of sidebar
            */}

@@ -2,15 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modify the default scrollbar for all browsers */
-#recent-projects-chart {
-  /* For Firefox */
-  scrollbar-width: thin;
-  scrollbar-color: #e5e7eb transparent;
+.custom-scroll-container::-webkit-scrollbar {
+  display: none;
 }
+/* Modify the default scrollbar for all browsers */
+/* #recent-projects-chart { */
+  /* For Firefox */
+  /* scrollbar-width: thin;
+  scrollbar-color: #e5e7eb transparent; */
+/* } */
 
 /* WebKit browsers (Chrome, Safari, Edge Chromium) */
-#recent-projects-chart::-webkit-scrollbar {
+/* #recent-projects-chart::-webkit-scrollbar {
   width: 8px;
 }
 
@@ -23,16 +26,16 @@
   border-radius: 4px;
   border: 2px solid transparent;
   background-clip: content-box;
-}
+} */
 
 /* Hide the default scrollbar for all browsers */
-#recent-projects-chart {
+/* #recent-projects-chart { */
   /* For Firefox */
-  scrollbar-width: none;
-  scrollbar-color: transparent transparent;
-}
+  /* scrollbar-width: none;
+  scrollbar-color: transparent transparent; */
+/* } */
 
 /* WebKit browsers (Chrome, Safari, Edge Chromium) */
-#recent-projects-chart::-webkit-scrollbar {
+/* #recent-projects-chart::-webkit-scrollbar {
   display: none;
-}
+} */
