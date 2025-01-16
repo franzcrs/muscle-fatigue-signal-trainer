@@ -40,7 +40,6 @@ function App() {
   const [thumbTop, setThumbTop] = useState(0);
   // Custom thumb drag variables
   const isDraggingThumb = useRef(false);
-  const draggableLength = useRef(0);
   const dragStartY = useRef(0);
   const dragStartScrollTop = useRef(0);
 
@@ -125,6 +124,7 @@ function App() {
     if (container) {
       const { scrollTop, scrollHeight, clientHeight } = container;
       const newThumbTop = scrollTop + (scrollTop / scrollHeight) * clientHeight;
+      console.log("newThumbTop", newThumbTop);
       setTimeout(() => {
         setThumbTop(newThumbTop);
       }, 1);
@@ -134,14 +134,10 @@ function App() {
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (container) {
-      const { scrollHeight, clientHeight } = container;
-      const thumbHeightCalc = (clientHeight / scrollHeight) * clientHeight;
-      setThumbHeight(thumbHeightCalc);
-      draggableLength.current = clientHeight - thumbHeightCalc;
-      console.log("thumbHeight", thumbHeightCalc);
-
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      console.log("useEffect", "handleScroll");
+      console.log("scrollTop", scrollTop, "scrollHeight", scrollHeight, "clientHeight", clientHeight);
       container.addEventListener('scroll', handleScroll);
-      handleScroll(); // Initial calculation
     }
     return () => {
       const container = scrollContainerRef.current;
@@ -149,6 +145,26 @@ function App() {
         container.removeEventListener('scroll', handleScroll);
       }
     };
+  }, []);
+
+   // Calculation of thumb height
+   const calculateThumbHeight = () => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const { scrollHeight, clientHeight } = container;
+      const newThumbHeight = (clientHeight / scrollHeight) * clientHeight;
+      setThumbHeight(newThumbHeight);
+      console.log("thumbHeight", newThumbHeight);
+    }
+  }
+
+  useEffect(() => {
+    console.log("useEffect", "calculateThumbHeight");
+    calculateThumbHeight();
+    window.addEventListener("resize", calculateThumbHeight);
+    return () => {
+      window.removeEventListener("resize", calculateThumbHeight);
+    }
   }, []);
 
   // Handle Drag of Custom Thumb
@@ -170,8 +186,6 @@ function App() {
     if (!container) return;
     const { scrollHeight, clientHeight } = container;
     const draggedVector = e.clientY - dragStartY.current;
-    // console.log("dragStartY", dragStartY.current);
-    // console.log("draggedVector", draggedVector);
 
     const newScrollTop = dragStartScrollTop.current + draggedVector * (scrollHeight / clientHeight);
     container.scrollTop = newScrollTop;
@@ -224,7 +238,7 @@ function App() {
           <div 
           id="recent-projects-chart"
           ref={scrollContainerRef}
-          className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 overflow-y-auto min-h-[40dvh] max-h-[45vh] relative
+          className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 overflow-y-auto min-h-[40dvh] max-h-[45vh] relative overscroll-none
           pr-[11px]"
           >
             <div 
@@ -260,13 +274,15 @@ function App() {
             <div 
               id="custom-thumb"
               ref={thumbRef}
-              style={{ height:`${thumbHeight-6}px`, top: `${thumbTop+3.5}px`, }}
+              style={{ height:`${thumbHeight-7}px`, top: `${thumbTop+3.5}px`, }}
               className="absolute top-0 right-[2.5px] w-[6px] rounded-full bg-gray-200 cursor-pointer"
-              onMouseDown={handleMouseDownThumb}>
+              onMouseDown={handleMouseDownThumb}
+            >
             </div>
           </div>
           {/* 
           TODO: Update thumb height upon change of clientHeight
+          TODO: Transform custom thumb to an automatic feature when scrollHeight is greater than clientHeight
           TODO: Add elements of sidebar
            */}
         </div>
