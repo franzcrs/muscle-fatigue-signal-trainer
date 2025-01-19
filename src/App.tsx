@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { Trash2 } from 'lucide-react';
-import Logo from "./assets/Muscle Fatigue Signal Trainer.svg?react";
-import CustomYScrollContainer from './components/CustomYScrollContainer';
+import HomeScreen from './components/HomeScreen';
+import StepProjectFolder from './components/StepProjectFolder';
 
 const SIDE_BAR_MIN_WIDTH = 250;
 const SIDE_BAR_MAX_WIDTH = 350;
@@ -30,19 +29,23 @@ const SIDE_BAR_DEFAULT_WIDTH = 280;
 // text-5xl	font-size: 3rem; /* 48px */ line-height: 1;
 // text-6xl	font-size: 3.75rem; /* 60px */ line-height: 1;
 
+// font-thin	font-weight: 100;
+// font-extralight	font-weight: 200;
+// font-light	font-weight: 300;
+// font-normal	font-weight: 400;
+// font-medium	font-weight: 500;
+// font-semibold	font-weight: 600;
+// font-bold	font-weight: 700;
+// font-extrabold	font-weight: 800;
+// font-black	font-weight: 900;
+
 function App() {
   // Sidebar width adjustment variables
   const [sidebarWidth, setSidebarWidth] = useState(SIDE_BAR_DEFAULT_WIDTH);
   const isDragging = useRef(false);
-  // Recent projects chart scroll variables
-  // const scrollContainerRef = useRef<HTMLDivElement>(null);
-  // const thumbRef = useRef<HTMLDivElement>(null);
-  // const [thumbHeight, setThumbHeight] = useState(0);
-  // const [thumbTop, setThumbTop] = useState(0);
-  // Custom thumb drag variables
-  // const isDraggingThumb = useRef(false);
-  // const dragStartY = useRef(0);
-  // const dragStartScrollTop = useRef(0);
+  // Project folder selection variables
+  const [folderPath, setFolderPath] = useState('.../your_project_folder_path');
+  const [isFolderOpen, setIsFolderOpen] = useState(false);
 
   const handleMouseDownDivider = () => {
     isDragging.current = true;
@@ -68,48 +71,6 @@ function App() {
     document.body.classList.remove('select-none'); // Enable text selection
   };
 
-  const retrieveRecentResults = () => {
-    return [
-      {
-        id: 1,
-        folder: '.../muscle_fatigue_isometric_elbow_flexion',
-        modified: '2024-09-01',
-      },
-      {
-        id: 2,
-        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy',
-        modified: '2024-10-01',
-      },
-      {
-        id: 3,
-        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
-        modified: '2024-10-01',
-      },
-      {
-        id: 4,
-        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
-        modified: '2024-10-01',
-      },
-      {
-        id: 5,
-        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
-        modified: '2024-10-01',
-      },
-      {
-        id: 6,
-        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
-        modified: '2024-10-01',
-      },
-      {
-        id: 7,
-        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
-        modified: '2024-10-01',
-      },
-    ]
-  }
-
-  const recentResults = retrieveRecentResults();
-
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseMoveDivider);
     document.addEventListener('mouseup', handleMouseUpDivider);
@@ -119,211 +80,43 @@ function App() {
     };
   }, []);
 
-  // Handle Scroll of Recent Projects Chart
-  // const handleScroll = () => {
-  //   const container = scrollContainerRef.current;
-  //   if (container) {
-  //     const { scrollTop, scrollHeight, clientHeight } = container;
-  //     const newThumbTop = scrollTop + (scrollTop / scrollHeight) * clientHeight;
-  //     console.log("newThumbTop", newThumbTop);
-  //     setTimeout(() => {
-  //       setThumbTop(newThumbTop);
-  //     }, 1);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const container = scrollContainerRef.current;
-  //   if (container) {
-  //     const { scrollTop, scrollHeight, clientHeight } = container;
-  //     console.log("useEffect", "handleScroll");
-  //     console.log("scrollTop", scrollTop, "scrollHeight", scrollHeight, "clientHeight", clientHeight);
-  //     container.addEventListener('scroll', handleScroll);
-  //   }
-  //   return () => {
-  //     const container = scrollContainerRef.current;
-  //     if (container) {
-  //       container.removeEventListener('scroll', handleScroll);
-  //     }
-  //   };
-  // }, []);
-
-   // Calculation of thumb height
-  //  const calculateThumbHeight = () => {
-  //   const container = scrollContainerRef.current;
-  //   if (container) {
-  //     const { scrollHeight, clientHeight } = container;
-  //     const newThumbHeight = (clientHeight / scrollHeight) * clientHeight;
-  //     setThumbHeight(newThumbHeight);
-  //     console.log("thumbHeight", newThumbHeight);
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   console.log("useEffect", "calculateThumbHeight");
-  //   calculateThumbHeight();
-  //   window.addEventListener("resize", calculateThumbHeight);
-  //   return () => {
-  //     window.removeEventListener("resize", calculateThumbHeight);
-  //   }
-  // }, []);
-
-  // Handle Drag of Custom Thumb
-  // const handleMouseDownThumb = (e:MouseEvent) => {
-  //   e.preventDefault();
-  //   if (!isDraggingThumb.current) {
-  //     dragStartY.current = e.clientY;
-  //     // if (dragStartY.current) console.log("dragStartY.current", dragStartY.current);
-  //     const container = scrollContainerRef.current;
-  //     if (container) { dragStartScrollTop.current = container.scrollTop; }
-  //   }
-  //   isDraggingThumb.current = true;
-  //   document.body.classList.add('select-none'); // Disable text selection
-  // };
-
-  // const handleMouseMoveThumb = (e: MouseEvent) => {
-  //   if (!isDraggingThumb.current) return;
-  //   const container = scrollContainerRef.current;
-  //   if (!container) return;
-  //   const { scrollHeight, clientHeight } = container;
-  //   const draggedVector = e.clientY - dragStartY.current;
-
-  //   const newScrollTop = dragStartScrollTop.current + draggedVector * (scrollHeight / clientHeight);
-  //   container.scrollTop = newScrollTop;
-  // };
-
-  // const handleMouseUpThumb = () => {
-  //   if (isDraggingThumb.current) {
-  //     isDraggingThumb.current = false;
-  //     document.body.classList.remove('select-none'); // Enable text selection
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   document.addEventListener('mousemove', handleMouseMoveThumb);
-  //   document.addEventListener('mouseup', handleMouseUpThumb);
-  //   return () => {
-  //     document.removeEventListener('mousemove', handleMouseMoveThumb);
-  //     document.removeEventListener('mouseup', handleMouseUpThumb);
-  //   };
-  // }, []);
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-white from-80% to-gray-100 flex flex-row items-normal justify-center divide-x-[1px] py-2">
       <div
         style={{ width: `${sidebarWidth}px`, }}
-        className={`min-w-[${SIDE_BAR_MIN_WIDTH}px] px-4 py-2 relative flex-none`}
+        className={`min-w-[${SIDE_BAR_MIN_WIDTH}px] px-4 pt-3 pb-2 relative flex-none`}
       >
-        Sidebar
-        <div 
+        <div className='space-y-4 text-start'>
+          <StepProjectFolder
+            folderPath={folderPath}
+            setFolderPath={setFolderPath}
+            isFolderOpen={isFolderOpen}
+            setIsFolderOpen={setIsFolderOpen}
+          />
+          {isFolderOpen && (
+            <div className='flex flex-col space-y-1 text-start'>
+              <h2 className="font-light text-xs">
+                Render Objects
+              </h2>
+            </div>
+          )}
+        </div>
+
+        <div
           id="divider"
           className="absolute right-[-4px] top-0 bottom-0 cursor-col-resize w-[8px] bg-transparent"
           onMouseDown={handleMouseDownDivider}
         >
+          {/* 
+          TODO: Implement folder selection with Tauri API
+          TODO: Add elements of sidebar
+        */}
         </div>
       </div>
-      <div className="flex-1 flex flex-col justify-around">
-        <div className="px-8 pt-8 pb-12 space-y-3 text-center">
-          <h1 className="text-xl flex items-center justify-center">
-            <Logo width={300} fill={'#111827'}/>
-          </h1>
-          <h2 className="font-extralight text-sm">
-          A training tool for ML prediction of muscle fatigue signals
-          </h2>
-          <p className="font-extralight text-base text-gray-300">
-            by Franz Chuquirachi
-          </p>
-          <h3 className="font-light text-xs text-left">
-            Recent projects
-          </h3>
-
-          {/* <div 
-          id="recent-projects-chart"
-          ref={scrollContainerRef}
-          className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 overflow-y-auto min-h-[40dvh] max-h-[45vh] relative overscroll-none
-          pr-[11px]"
-          >
-            <div 
-            id="recent-projects-header"
-            className="flex flex-row flex-nowrap space-x-2 items-center px-4 pb-1 pt-2"
-            >
-              <div className="flex-auto basis-3/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
-                Folder Name
-              </div>
-              <div className="flex-initial basis-1/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
-                Modified
-              </div>
-              <div className="flex-initial basis-[6%] font-extralight text-[0.7rem] text-center overflow-hidden whitespace-nowrap">
-                Action
-              </div>
-            </div>
-            {recentResults.map((recentResults) => (
-              <div 
-                id="recent-projects-item"
-                key={recentResults.id.toString()}
-                className="flex flex-row flex-nowrap space-x-2 items-center p-4 hover:bg-gray-200 transition-colors duration-300"
-              >
-                <h3 className="flex-auto basis-3/5 font-light text-xs text-left overflow-hidden whitespace-nowrap">
-                  {recentResults.folder}
-                </h3>
-                <h3 className="flex-initial basis-1/5 font-light text-xs text-left overflow-hidden whitespace-nowrap">
-                  {recentResults.modified}
-                </h3>
-                <Trash2 className="flex-initial basis-[6%] text-gray-400 hover:text-gray-100 transition-colors duration-100" size={16} />
-              </div>
-            )
-            )}
-            <div 
-              id="custom-thumb"
-              ref={thumbRef}
-              style={{ height:`${thumbHeight-7}px`, top: `${thumbTop+3.5}px`, }}
-              className="absolute top-0 right-[2.5px] w-[6px] rounded-full bg-gray-200 cursor-pointer"
-              onMouseDown={handleMouseDownThumb}
-            >
-            </div>
-          </div> */}
-          
-          <CustomYScrollContainer
-          id="recent-projects-chart"
-          className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 min-h-[40dvh] max-h-[45vh] overflow-y-auto"
-          >
-            <div 
-            id="recent-projects-header"
-            className="flex flex-row flex-nowrap space-x-2 items-center px-4 pb-1 pt-2"
-            >
-              <div className="flex-auto basis-3/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
-                Folder Name
-              </div>
-              <div className="flex-initial basis-1/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
-                Modified
-              </div>
-              <div className="flex-initial basis-[6%] font-extralight text-[0.7rem] text-center overflow-hidden whitespace-nowrap">
-                Action
-              </div>
-            </div>
-            {recentResults.map((recentResults) => (
-              <div 
-                id="recent-projects-item"
-                key={recentResults.id.toString()}
-                className="flex flex-row flex-nowrap space-x-2 items-center p-4 hover:bg-gray-200 transition-colors duration-300"
-              >
-                <h3 className="flex-auto basis-3/5 font-light text-xs text-left overflow-hidden whitespace-nowrap">
-                  {recentResults.folder}
-                </h3>
-                <h3 className="flex-initial basis-1/5 font-light text-xs text-left overflow-hidden whitespace-nowrap">
-                  {recentResults.modified}
-                </h3>
-                <Trash2 className="flex-initial basis-[6%] text-gray-400 hover:text-gray-100 transition-colors duration-100" size={16} />
-              </div>
-            )
-            )}
-          </CustomYScrollContainer>
-
-          {/* 
-          TODO: Transform custom thumb to an automatic feature when scrollHeight is greater than clientHeight
-          TODO: Add elements of sidebar
-           */}
-        </div>
+      <div
+        className="flex-1 flex flex-col justify-around"
+      >
+        <HomeScreen />
       </div>
     </div>
   );

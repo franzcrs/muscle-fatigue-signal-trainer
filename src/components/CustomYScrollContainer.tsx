@@ -1,9 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-function calculateRandomId() {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-}
-
 interface CustomScrollContainerProps {
   children: React.ReactNode;
   id?: string;
@@ -11,7 +7,6 @@ interface CustomScrollContainerProps {
 }
 
 const CustomYScrollContainer: React.FC<CustomScrollContainerProps> = ({ children, id, className, }) => {
-  const containerId = id || calculateRandomId();
   // Scroll bar visibility state
   const [isScrollRequired, setIsScrollRequired] = useState(false);
   // Container scroll action variables
@@ -57,23 +52,6 @@ const CustomYScrollContainer: React.FC<CustomScrollContainerProps> = ({ children
     }
   };
 
-  // Add scroll event listener to the container
-  // useEffect(() => {
-  //   const container = scrollContainerRef.current;
-  //   if (container) {
-  //     const { scrollTop, scrollHeight, clientHeight } = container;
-  //     console.log("useEffect", "handleScroll");
-  //     console.log("scrollTop", scrollTop, "scrollHeight", scrollHeight, "clientHeight", clientHeight);
-  //     container.addEventListener('scroll', handleScroll);
-  //   }
-  //   return () => {
-  //     const container = scrollContainerRef.current;
-  //     if (container) {
-  //       container.removeEventListener('scroll', handleScroll);
-  //     }
-  //   };
-  // }, []);
-
    // Calculation of thumb height
    const calculateThumbHeight = () => {
     const container = scrollContainerRef.current;
@@ -84,16 +62,6 @@ const CustomYScrollContainer: React.FC<CustomScrollContainerProps> = ({ children
       console.log("thumbHeight", newThumbHeight);
     }
   }
-
-  // Calculate thumb height after on every window resize
-  // useEffect(() => {
-  //   console.log("useEffect", "calculateThumbHeight");
-  //   calculateThumbHeight();
-  //   window.addEventListener("resize", calculateThumbHeight);
-  //   return () => {
-  //     window.removeEventListener("resize", calculateThumbHeight);
-  //   }
-  // }, []);
 
   // Handle for the start of drag action of custom thumb
   const handleMouseDownThumb = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -126,58 +94,39 @@ const CustomYScrollContainer: React.FC<CustomScrollContainerProps> = ({ children
 
   // Configure functions to execute after first render and cleanup after unmount
   useEffect(() => {
-    // if (isScrollRequired) {
-      // Add a css stylessheet to the head
-      // const myStyleTag = document.createElement('style');
-      // myStyleTag.id = `${containerId}-css`;
-      // myStyleTag.innerHTML = `
-      //   #${containerId} {
-      //     scrollbar-width: none;
-      //     scrollbar-color: transparent transparent;
-      //   }
-      //   #${containerId}::-webkit-scrollbar {
-      //     display: none;
-      //   }
-      // `;
-      // document.head.appendChild(myStyleTag);
-      // Call the scroll handler on every scroll event of the container
+    // Call the scroll handler on every scroll event of the container
+    const container = scrollContainerRef.current;
+    if (container) {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      console.log("useEffect", "handleScroll");
+      console.log("scrollTop", scrollTop, "scrollHeight", scrollHeight, "clientHeight", clientHeight);
+      container.addEventListener('scroll', handleScroll);
+    }
+    // Initial calculation of thumb height
+    console.log("useEffect", "calculateThumbHeight");
+    calculateThumbHeight();
+    // Call the thumb height calculation on every window resize
+    window.addEventListener("resize", calculateThumbHeight);
+    // Call the respective thumb actions on mouse events
+    document.addEventListener('mousemove', handleMouseMoveThumb);
+    document.addEventListener('mouseup', handleMouseUpThumb);
+    return () => {
+      // Cleanup scroll event listener
       const container = scrollContainerRef.current;
       if (container) {
-        const { scrollTop, scrollHeight, clientHeight } = container;
-        console.log("useEffect", "handleScroll");
-        console.log("scrollTop", scrollTop, "scrollHeight", scrollHeight, "clientHeight", clientHeight);
-        container.addEventListener('scroll', handleScroll);
+        container.removeEventListener('scroll', handleScroll);
       }
-      // Initial calculation of thumb height
-      console.log("useEffect", "calculateThumbHeight");
-      calculateThumbHeight();
-      // Call the thumb height calculation on every window resize
-      window.addEventListener("resize", calculateThumbHeight);
-      // Call the respective thumb actions on mouse events
-      document.addEventListener('mousemove', handleMouseMoveThumb);
-      document.addEventListener('mouseup', handleMouseUpThumb);
-    // }
-    return () => {
-      // if (isScrollRequired) {
-        // Cleanup css stylesheet
-        // document.getElementById(`${containerId}-css`)?.remove();
-        // Cleanup scroll event listener
-        const container = scrollContainerRef.current;
-        if (container) {
-          container.removeEventListener('scroll', handleScroll);
-        }
-        // Cleanup window resize event listener
-        window.removeEventListener("resize", calculateThumbHeight);
-        // Cleanup mouse event listeners
-        document.removeEventListener('mousemove', handleMouseMoveThumb);
-        document.removeEventListener('mouseup', handleMouseUpThumb);
-      // }
+      // Cleanup window resize event listener
+      window.removeEventListener("resize", calculateThumbHeight);
+      // Cleanup mouse event listeners
+      document.removeEventListener('mousemove', handleMouseMoveThumb);
+      document.removeEventListener('mouseup', handleMouseUpThumb);
     };
   }, [thumbRef]);
 
   return (
     <div
-      id={containerId}
+      id={id}
       ref={scrollContainerRef}
       style={{ scrollbarWidth: 'none', scrollbarColor: 'transparent transparent' }}
       className={`${className} custom-scroll-container ${isScrollRequired ? 'relative overflow-y-auto overscroll-none pr-[11px]' : ''}`}
