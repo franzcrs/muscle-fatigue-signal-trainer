@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import HomeScreen from './components/HomeScreen';
 import StepProjectFolder from './components/StepProjectFolder';
+import StepDataCollection from './components/StepDataCollection';
 
 const SIDE_BAR_MIN_WIDTH = 250;
 const SIDE_BAR_MAX_WIDTH = 350;
@@ -44,8 +45,10 @@ function App() {
   const [sidebarWidth, setSidebarWidth] = useState(SIDE_BAR_DEFAULT_WIDTH);
   const isDragging = useRef(false);
   // Project folder selection variables
-  const [folderPath, setFolderPath] = useState('.../your_project_folder_path');
-  const [isFolderOpen, setIsFolderOpen] = useState(false);
+  const [projectFolderPath, setProjectFolderPath] = useState('');
+  const [isProjectFolderOpen, setIsProjectFolderOpen] = useState(false);
+  // Data collection folder selection variables
+  const [isDataCollectionOpen, setIsDataCollectionOpen] = useState(false);
 
   const handleMouseDownDivider = () => {
     isDragging.current = true;
@@ -88,18 +91,24 @@ function App() {
       >
         <div className='space-y-4 text-start'>
           <StepProjectFolder
-            folderPath={folderPath}
-            setFolderPath={setFolderPath}
-            isFolderOpen={isFolderOpen}
-            setIsFolderOpen={setIsFolderOpen}
+            folderPath={projectFolderPath}
+            setFolderPath={setProjectFolderPath}
+            isFolderOpen={isProjectFolderOpen}
+            setIsFolderOpen={setIsProjectFolderOpen}
           />
-          {isFolderOpen && (
-            <div className='flex flex-col space-y-1 text-start'>
-              <h2 className="font-light text-xs">
-                Render Objects
-              </h2>
-            </div>
+
+          {isProjectFolderOpen && (
+            <StepDataCollection
+              projectFolderPath={projectFolderPath}
+              isFolderOpen={isDataCollectionOpen}
+              setIsFolderOpen={setIsDataCollectionOpen}
+            />
           )}
+
+          {isProjectFolderOpen && (
+            <div>Other Objects</div>
+          )}
+
         </div>
 
         <div
@@ -108,7 +117,6 @@ function App() {
           onMouseDown={handleMouseDownDivider}
         >
           {/* 
-          TODO: Implement folder selection with Tauri API
           TODO: Add elements of sidebar
         */}
         </div>

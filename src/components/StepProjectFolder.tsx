@@ -26,9 +26,9 @@ async function resolveAllDirectories() {
   const results = await Promise.all(promises);
 
   results.forEach((result) => {
-    if (result.path) {
+    if ('path' in result) {
       console.log(`Directory ${result.directory}: ${result.path}`);
-    } else {
+    } else if ('error' in result) {
       console.error(`Error resolving directory ${result.directory}: ${result.error}`);
     }
   });
@@ -36,25 +36,28 @@ async function resolveAllDirectories() {
 
 const StepProjectFolder = ({ folderPath, setFolderPath, isFolderOpen, setIsFolderOpen }: StepProjectFolderProps) => {
   const [folderName, setFolderName] = useState('Choose your folder');
+  const [reducedFolderPath, setReducedFolderPath] = useState('.../your_project_folder_path');
+  // const [tooltipFolderPath, setTooltipFolderPath] = useState('');
 
-  const selectFolder = async (folderPath: string | null) => {
-    // const folderPath = '.../muscle_fatigue_isometric_elbow_flexion';
-    if (!folderPath) return;
-    let folderName = folderPath.split('/').pop();
-    const folderParent = await dirname(folderPath)
+  const selectFolder = async (absoluteFolderPath: string | null) => {
+    // const absoluteFolderPath = '.../muscle_fatigue_isometric_elbow_flexion';
+    if (!absoluteFolderPath) return;
+    setFolderPath(absoluteFolderPath);
+    // setTooltipFolderPath(absoluteFolderPath);
+    let folderName = absoluteFolderPath.split('/').pop();
+    const folderParent = await dirname(absoluteFolderPath)
       .then((path) => path.split('/').pop())
       .catch((error) => console.error(error));
-    const folderPathDisplay = '.../' + folderParent as string + '/' + folderName;
+    setReducedFolderPath('.../' + folderParent as string + '/' + folderName);
     folderName
       ? folderName = folderName
         .replace(/_/g, ' ')
         .replace(/\b\w/g, char => char.toUpperCase())
-      : folderName = folderPathDisplay;
-    setFolderPath(folderPathDisplay);
-    console.log('Folder path set to:', folderPathDisplay);
+      : folderName = reducedFolderPath;
     setFolderName(folderName);
+    console.log('Folder path set to:', absoluteFolderPath);
     console.log('Folder name set to:', folderName);
-    setIsFolderOpen(true);
+    if (!isFolderOpen) { setIsFolderOpen(true) };
   }
 
   const handlerClick = async () => {
@@ -96,7 +99,7 @@ const StepProjectFolder = ({ folderPath, setFolderPath, isFolderOpen, setIsFolde
         </div>
         <div className='flex-auto overflow-hidden text-left truncate'>
           <p className='font-normal text-sm truncate'>{folderName}</p>
-          <p className='font-extralight text-[11px] truncate'>{folderPath}</p>
+          <p className='font-extralight text-[0.7rem] truncate' title={`${folderPath}`}>{reducedFolderPath}</p>
         </div>
         <ChevronsUpDown className="flex-none text-gray-700" size={20} width={16} height={20} />
       </button>
