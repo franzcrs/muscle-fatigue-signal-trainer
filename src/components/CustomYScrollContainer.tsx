@@ -52,8 +52,8 @@ const CustomYScrollContainer: React.FC<CustomScrollContainerProps> = ({ children
     }
   };
 
-   // Calculation of thumb height
-   const calculateThumbHeight = () => {
+  // Calculation of thumb height
+  const calculateThumbHeight = () => {
     const container = scrollContainerRef.current;
     if (container) {
       const { scrollHeight, clientHeight } = container;
@@ -124,6 +124,18 @@ const CustomYScrollContainer: React.FC<CustomScrollContainerProps> = ({ children
     };
   }, [thumbRef]);
 
+  const modifyTopChildren = (): React.ReactNode => {
+    return React.Children.map(children, (child) => {
+      if (React.isValidElement(child)) {
+        const childElement = child as React.ReactElement<{ className?: string }>;
+        return React.cloneElement(childElement, {
+          className: `${childElement.props.className || ''} pr-2`.trim()
+        });
+      }
+      return child;
+    });
+  }
+
   return (
     <div
       id={id}
@@ -131,16 +143,30 @@ const CustomYScrollContainer: React.FC<CustomScrollContainerProps> = ({ children
       style={{ scrollbarWidth: 'none', scrollbarColor: 'transparent transparent' }}
       className={`${className} custom-scroll-container ${isScrollRequired ? 'relative overflow-y-auto overscroll-none pr-[11px]' : ''}`}
     >
-        {children}
-        {isScrollRequired && (
-          <div 
+      {/* {children} */}
+      {isScrollRequired ? (
+        <>
+          {modifyTopChildren()}
+          <div
             id="custom-thumb"
             ref={thumbRef}
-            style={{ height:`${thumbHeight-7}px`, top: `${thumbTop+3.5}px`, }}
+            style={{ height: `${thumbHeight - 7}px`, top: `${thumbTop + 3.5}px`, }}
             className="absolute top-0 right-[2.5px] w-[6px] rounded-full bg-gray-200 cursor-pointer"
             onMouseDown={handleMouseDownThumb}
           />
-        )}
+        </>
+      ) : (
+        children
+      )}
+      {/* {isScrollRequired && (
+        <div
+          id="custom-thumb"
+          ref={thumbRef}
+          style={{ height: `${thumbHeight - 7}px`, top: `${thumbTop + 3.5}px`, }}
+          className="absolute top-0 right-[2.5px] w-[6px] rounded-full bg-gray-200 cursor-pointer"
+          onMouseDown={handleMouseDownThumb}
+        />
+      )} */}
     </div>
   );
 };

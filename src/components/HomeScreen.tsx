@@ -41,6 +41,21 @@ const HomeScreen = () => {
         folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
         modified: '2024-10-01',
       },
+      {
+        id: 8,
+        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
+        modified: '2024-10-01',
+      },
+      {
+        id: 9,
+        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
+        modified: '2024-10-01',
+      },
+      {
+        id: 10,
+        folder: '.../muscle_fatigue_isometric_elbow_flexion_copy_2',
+        modified: '2024-10-01',
+      },
     ]
   }
 
@@ -63,11 +78,13 @@ const HomeScreen = () => {
 
       <CustomYScrollContainer
         id="recent-projects-chart"
-        className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 min-h-[40dvh] max-h-[45vh] overflow-y-auto"
+        // className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 min-h-[40dvh] max-h-[45vh] overflow-y-auto"
+        className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 min-h-[273px] max-h-[47vh] overflow-y-auto"
       >
         <div
           id="recent-projects-header"
-          className="flex flex-row flex-nowrap space-x-2 items-center px-4 pb-1 pt-2"
+          // className="flex flex-row flex-nowrap space-x-2 items-center px-4 pb-1 pt-2"
+          className="flex flex-row flex-nowrap space-x-1 lg:space-x-2 items-center px-4 pb-1 pt-2 bg-gradient-to-b from-gray-100 from-80% to-gray-100/20 sticky top-0"
         >
           <div className="flex-auto basis-3/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
             Folder Name
@@ -83,7 +100,7 @@ const HomeScreen = () => {
           <div
             id="recent-projects-item"
             key={recentResults.id.toString()}
-            className="flex flex-row flex-nowrap space-x-2 items-center p-4 hover:bg-gray-200 transition-colors duration-300 cursor-pointer"
+            className="flex flex-row flex-nowrap space-x-1 lg:space-x-2 items-center p-4 hover:bg-gray-200 transition-colors duration-300 cursor-pointer"
           >
             <h3 className="flex-auto basis-3/5 font-light text-xs text-left overflow-hidden whitespace-nowrap">
               {recentResults.folder}
