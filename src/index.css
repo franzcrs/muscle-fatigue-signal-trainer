@@ -39,3 +39,29 @@
 /* #recent-projects-chart::-webkit-scrollbar {
   display: none;
 } */
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb transparent;
+  overscroll-behavior: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #e5e7eb;
+  border-radius: 5.5px;
+  border: 2.5px solid transparent;
+  background-clip: content-box;
+}
+
+.custom-scrollbar>div {
+  padding-right: 8px;
+} 

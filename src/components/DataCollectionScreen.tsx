@@ -1,15 +1,42 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomYScrollContainer from './CustomYScrollContainer'
+import { MindMapNode, MindMap } from '../lib/mindmap-comp/MindMap';
+import { createNode, generateNodeId } from '../lib/mindmap';
 
 type Props = {
   isActive: boolean;
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const initialNodes: MindMapNode[] = [
+  createNode('1', 'Root Node', null, 0),
+  createNode('2', 'Child 1', '1', 1),
+  createNode('3', 'Child 2', '1', 1),
+  createNode('4', 'Subchild 1', '2', 2),
+  createNode('5', 'Subchild 2', '2', 2),
+];
+
 const DataCollectionScreen = ({ isActive, setIsActive }: Props) => {
   useEffect(() => {
     console.log('DataCollectionScreen isActive:', isActive)
   }, [isActive])
+
+  const [nodes, setNodes] = useState<MindMapNode[]>(initialNodes);
+
+  const handleNodeClick = (nodeId: string) => {
+    // You can implement node editing or other interactions here
+    console.log('Node clicked:', nodeId);
+  };
+
+  const handleNodeAdd = (parentId: string, level: number) => {
+    const newNode = createNode(
+      generateNodeId(),
+      `New Node ${nodes.length + 1}`,
+      parentId,
+      level
+    );
+    setNodes([...nodes, newNode]);
+  };
 
   return (
     <div className={`px-8 pt-3 pb-12 space-y-5 flex-1 flex flex-col ${isActive ? 'opacity-100' : 'opacity-50'}`}>
@@ -48,7 +75,7 @@ const DataCollectionScreen = ({ isActive, setIsActive }: Props) => {
             <h5 className="font-normal text-xs text-gray-400">
               Data files
             </h5>
-            <CustomYScrollContainer className='bg-gray-100 rounded px-3 py-2 h-[70px] max-h-[70px] space-y-1 overflow-y-auto'>
+            <div className='bg-gray-100 rounded px-3 py-2 h-[70px] max-h-[70px] space-y-1 overflow-y-auto custom-scrollbar'>
               <h3 className="font-light text-xs text-gray-800">
                 Emg
               </h3>
@@ -61,7 +88,7 @@ const DataCollectionScreen = ({ isActive, setIsActive }: Props) => {
               <h3 className="font-light text-xs text-gray-800">
                 Body composition
               </h3>
-            </CustomYScrollContainer>
+            </div>
           </div>
         </div>
       </div>
@@ -69,7 +96,27 @@ const DataCollectionScreen = ({ isActive, setIsActive }: Props) => {
         <h3 className="font-light text-xs">
           Add instances and files interactively
         </h3>
-        <div className='bg-gray-100 rounded-md p-2 w-full flex-1'>
+        <div className='relative bg-gray-100 rounded-md p-2 flex-1'>
+          {/* Canvas */}
+          <div
+            className='absolute left-0 top-0 w-full h-full overflow-auto custom-scrollbar'
+          >
+            {/* TODO: Create CustomScrollBarsContainer 
+                TODO: Create project json containing registered instance names
+                TODO: Generate initial nodes reading directories and files with tauri API */}
+            <div className='relative inset-20 w-[calc(100%+56px)] pb-20 flex flex-col space-y-16'>
+              <MindMap
+                nodes={nodes}
+                onNodeClick={handleNodeClick}
+                onNodeAdd={handleNodeAdd}
+              />
+              <MindMap
+                nodes={nodes}
+                onNodeClick={handleNodeClick}
+                onNodeAdd={handleNodeAdd}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -76,10 +76,10 @@ const HomeScreen = () => {
         Recent projects
       </h3>
 
-      <CustomYScrollContainer
+      <div
         id="recent-projects-chart"
         // className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 min-h-[40dvh] max-h-[45vh] overflow-y-auto"
-        className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 min-h-[273px] max-h-[47vh] overflow-y-auto"
+        className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 min-h-[273px] max-h-[47vh] overflow-y-auto custom-scrollbar"
       >
         <div
           id="recent-projects-header"
@@ -112,7 +112,7 @@ const HomeScreen = () => {
           </div>
         )
         )}
-      </CustomYScrollContainer>
+      </div>
     </div>
   )
 }

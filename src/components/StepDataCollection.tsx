@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { CornerDownRight, Folder } from 'lucide-react'
 import { exists, readDir, mkdir } from '@tauri-apps/plugin-fs';
 
-
 type StepDataCollectionProps = {
   projectFolderPath: string;
   isFolderOpen: boolean;

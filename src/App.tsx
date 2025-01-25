@@ -132,6 +132,9 @@ function App() {
             isActive={isDataCollectionActive}
             setIsActive={setIsDataCollectionActive} />
         )}
+        {/* <DataCollectionScreen
+            isActive={isDataCollectionActive}
+            setIsActive={setIsDataCollectionActive} /> */}
       </div>
     </div>
   );
