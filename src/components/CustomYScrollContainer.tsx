@@ -150,7 +150,7 @@ const CustomYScrollContainer: React.FC<CustomScrollContainerProps> = ({ children
           <div
             id="custom-thumb"
             ref={thumbRef}
-            style={{ height: `${thumbHeight - 7}px`, top: `${thumbTop + 3.5}px`, }}
+            style={{ height: `${thumbHeight - 7}px`, top: `${thumbTop + 3.5}px`, marginTop: '0', }}
             className="absolute top-0 right-[2.5px] w-[6px] rounded-full bg-gray-200 cursor-pointer"
             onMouseDown={handleMouseDownThumb}
           />

@@ -83,9 +83,9 @@ const StepProjectFolder = ({ folderPath, setFolderPath, isFolderOpen, setIsFolde
 
   return (
     <div className='flex flex-col space-y-1 text-start'>
-      <h2 className="font-light text-xs">
+      <h3 className="font-light text-xs">
         Project Folder
-      </h2>
+      </h3>
       <button
         onClick={handlerClick}
         className="bg-gray-100 hover:bg-gray-200 transition-colors duration-300 rounded p-2 flex flex-row flex-nowrap space-x-2 items-center"
@@ -98,7 +98,7 @@ const StepProjectFolder = ({ folderPath, setFolderPath, isFolderOpen, setIsFolde
           )}
         </div>
         <div className='flex-auto overflow-hidden text-left truncate'>
-          <p className='font-normal text-sm truncate'>{folderName}</p>
+          <h4 className='font-normal text-sm truncate'>{folderName}</h4>
           <p className='font-extralight text-[0.7rem] truncate' title={`${folderPath}`}>{reducedFolderPath}</p>
         </div>
         <ChevronsUpDown className="flex-none text-gray-700" size={20} width={16} height={20} />

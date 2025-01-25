@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import HomeScreen from './components/HomeScreen';
 import StepProjectFolder from './components/StepProjectFolder';
 import StepDataCollection from './components/StepDataCollection';
+import DataCollectionScreen from './components/DataCollectionScreen';
 
 const SIDE_BAR_MIN_WIDTH = 250;
 const SIDE_BAR_MAX_WIDTH = 320;
@@ -48,7 +49,7 @@ function App() {
   const [projectFolderPath, setProjectFolderPath] = useState('');
   const [isProjectFolderOpen, setIsProjectFolderOpen] = useState(false);
   // Data collection folder selection variables
-  const [isDataCollectionOpen, setIsDataCollectionOpen] = useState(false);
+  const [isDataCollectionActive, setIsDataCollectionActive] = useState(false);
 
   const handleMouseDownDivider = () => {
     isDragging.current = true;
@@ -84,7 +85,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white from-80% to-gray-100 flex flex-row items-normal justify-center divide-x-[1px] py-2">
+    <div className="min-h-screen bg-gradient-to-b from-white from-80% to-gray-100 flex flex-row justify-center divide-x-[1px] py-2">
       <div
         style={{ width: `${sidebarWidth}px`, }}
         className={`min-w-[${SIDE_BAR_MIN_WIDTH}px] px-4 pt-3 pb-2 relative flex-none`}
@@ -100,8 +101,8 @@ function App() {
           {isProjectFolderOpen && (
             <StepDataCollection
               projectFolderPath={projectFolderPath}
-              isFolderOpen={isDataCollectionOpen}
-              setIsFolderOpen={setIsDataCollectionOpen}
+              isFolderOpen={isDataCollectionActive}
+              setIsFolderOpen={setIsDataCollectionActive}
             />
           )}
 
@@ -122,9 +123,15 @@ function App() {
         </div>
       </div>
       <div
-        className="flex-1 flex flex-col justify-around"
+        className={`flex-1 flex flex-col`}
       >
-        <HomeScreen />
+        {!isProjectFolderOpen ? (
+          <HomeScreen />
+        ) : (
+          <DataCollectionScreen
+            isActive={isDataCollectionActive}
+            setIsActive={setIsDataCollectionActive} />
+        )}
       </div>
     </div>
   );

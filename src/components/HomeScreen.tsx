@@ -62,7 +62,7 @@ const HomeScreen = () => {
   const recentResults = retrieveRecentResults();
 
   return (
-    <div className="px-8 pt-8 pb-12 space-y-3 text-center">
+    <div className="px-8 pt-8 pb-12 space-y-3 my-auto text-center">
       <h1 className="text-xl flex items-center justify-center">
         <Logo width={300} fill={'#111827'} />
       </h1>
@@ -83,24 +83,24 @@ const HomeScreen = () => {
       >
         <div
           id="recent-projects-header"
-          // className="flex flex-row flex-nowrap space-x-2 items-center px-4 pb-1 pt-2"
-          className="flex flex-row flex-nowrap space-x-1 lg:space-x-2 items-center px-4 pb-1 pt-2 bg-gradient-to-b from-gray-100 from-80% to-gray-100/20 sticky top-0"
+          // className="flex flex-row flex-nowrap space-x-2 px-4 pb-1 pt-2"
+          className="flex flex-row flex-nowrap space-x-1 lg:space-x-2 px-4 pb-1 pt-2 bg-gradient-to-b from-gray-100 from-80% to-gray-100/20 sticky top-0"
         >
-          <div className="flex-auto basis-3/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
+          <p className="flex-auto basis-3/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
             Folder Name
-          </div>
-          <div className="flex-initial basis-1/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
+          </p>
+          <p className="flex-initial basis-1/5 font-extralight text-[0.7rem] text-left overflow-hidden whitespace-nowrap">
             Modified
-          </div>
-          <div className="flex-initial basis-[6%] font-extralight text-[0.7rem] text-center overflow-hidden whitespace-nowrap">
+          </p>
+          <p className="flex-initial basis-[6%] font-extralight text-[0.7rem] text-center overflow-hidden whitespace-nowrap">
             Action
-          </div>
+          </p>
         </div>
         {recentResults.map((recentResults) => (
           <div
             id="recent-projects-item"
             key={recentResults.id.toString()}
-            className="flex flex-row flex-nowrap space-x-1 lg:space-x-2 items-center p-4 hover:bg-gray-200 transition-colors duration-300 cursor-pointer"
+            className="flex flex-row flex-nowrap space-x-1 lg:space-x-2 p-4 hover:bg-gray-200 transition-colors duration-300 cursor-pointer"
           >
             <h3 className="flex-auto basis-3/5 font-light text-xs text-left overflow-hidden whitespace-nowrap">
               {recentResults.folder}

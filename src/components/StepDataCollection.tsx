@@ -53,18 +53,18 @@ const StepDataCollection = ({ projectFolderPath, isFolderOpen, setIsFolderOpen }
     <div
       className={`flex flex-col space-y-1 text-start transition-opacity duration-200 ease-in-out ${changeOpacity ? 'opacity-100' : 'opacity-0'}`}
     >
-      <h2 className="font-light text-xs">
+      <h3 className="font-light text-xs">
         Data Collection
-      </h2>
+      </h3>
       <div
-        className={`bg-gray-100 rounded py-2 px-3 flex flex-col space-y-2 ${ isFolderOpen ? 'hover:bg-gray-200 transition-colors duration-300' : ''}`}
+        className={`transition-colors duration-300 rounded py-2 px-3 flex flex-col space-y-2 ${ isFolderOpen ? 'bg-gray-200' : 'bg-gray-100'}`}
       >
         <div className='flex flex-row flex-nowrap space-x-2 items-center'>
-          <CornerDownRight className='text-gray-700' size={18} />
+          <CornerDownRight className='text-gray-700' width={18} />
           {isFolderOpen ? (
             <div className='flex flex-row flex-nowrap space-x-2 items-center'>
               <Folder size={18} />
-              <p className='font-normal text-sm truncate'>Data collection</p>
+              <h4 className='font-normal text-sm truncate'>Data collection</h4>
             </div>
           ) : (
             <p className='font-extralight text-[0.7rem]'>
