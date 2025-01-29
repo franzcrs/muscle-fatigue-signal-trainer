@@ -3,7 +3,7 @@ import CustomYScrollContainer from './CustomYScrollContainer'
 import { MindMapNode, MindMap } from '../lib/mindmap-comp/MindMap';
 import { createNode, generateNodeId } from '../lib/mindmap';
 
-type Props = {
+type DataCollectionScreenProps = {
   isActive: boolean;
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -16,7 +16,7 @@ const initialNodes: MindMapNode[] = [
   createNode('5', 'Subchild 2', '2', 2),
 ];
 
-const DataCollectionScreen = ({ isActive, setIsActive }: Props) => {
+const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenProps) => {
   useEffect(() => {
     console.log('DataCollectionScreen isActive:', isActive)
   }, [isActive])
@@ -104,7 +104,7 @@ const DataCollectionScreen = ({ isActive, setIsActive }: Props) => {
             {/* TODO: Create CustomScrollBarsContainer 
                 TODO: Create project json containing registered instance names
                 TODO: Generate initial nodes reading directories and files with tauri API */}
-            <div className='relative inset-20 w-[calc(100%+56px)] pb-20 flex flex-col space-y-16'>
+            <div className='relative inset-20 p-0 pb-20 flex flex-col space-y-16'>
               <MindMap
                 nodes={nodes}
                 onNodeClick={handleNodeClick}

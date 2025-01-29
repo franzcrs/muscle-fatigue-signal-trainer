@@ -2,33 +2,34 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { NodeConnection } from './NodeConnection';
 
-export interface MindMapNode {
+export type MindMapNode = {
   id: string;
   content: string;
   parentId: string | null;
   level: number;
 }
 
-interface MindMapProps {
+type MindMapProps = {
   nodes: MindMapNode[];
   onNodeClick: (nodeId: string) => void;
   onNodeAdd: (parentId: string, level: number) => void;
 }
 
-interface NodePosition {
+type NodePosition = {
   id: string;
   x: number;
   y: number;
 }
 
-export const MindMap: React.FC<MindMapProps> = ({ nodes, onNodeClick, onNodeAdd }) => {
+export const MindMap = ({ nodes, onNodeClick, onNodeAdd }: MindMapProps) => {
+  const [renderedNodes, setRenderedNodes] = useState<MindMapNode[]>(nodes);
   const [nodePositions, setNodePositions] = useState<NodePosition[]>([]);
   const nodeRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const positionsOrigin = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
   useEffect(() => {
     const positions: NodePosition[] = [];
-    nodes.forEach((node) => {
+    renderedNodes.forEach((node) => {
       const element = nodeRefs.current[node.id];
       if (element) {
         const rect = element.getBoundingClientRect();
@@ -43,14 +44,26 @@ export const MindMap: React.FC<MindMapProps> = ({ nodes, onNodeClick, onNodeAdd 
       }
     });
     setNodePositions(positions);
-  }, [nodes]);
+  }, [renderedNodes]);
 
   const getNodeChildren = (nodeId: string) => {
     return nodes.filter((node) => node.parentId === nodeId);
   };
 
   const renderNode = (node: MindMapNode) => {
-    const children = getNodeChildren(node.id);
+    let children = getNodeChildren(node.id);
+    if (!node.id.includes('add-child')) {
+      const addChildNode: MindMapNode = {
+        id: `add-child-${node.id}`,
+        content: 'Add Child',
+        parentId: node.id,
+        level: node.level + 1
+       }
+      children.push(addChildNode);
+    }
+    if (!renderedNodes.find((n) => n.id === node.id)) {
+      setRenderedNodes([...renderedNodes, node]);
+    }
     const NODE_WIDTH = 144;
     const NODE_HEIGHT = 20;
     const HORIZONTAL_SPACING = 80;
@@ -89,7 +102,7 @@ export const MindMap: React.FC<MindMapProps> = ({ nodes, onNodeClick, onNodeAdd 
   };
 
   const renderConnections = () => {
-    return nodes
+    return renderedNodes
       .filter((node) => node.parentId !== null)
       .map((node) => {
         const parentPosition = nodePositions.find((pos) => pos.id === node.parentId);
@@ -112,7 +125,7 @@ export const MindMap: React.FC<MindMapProps> = ({ nodes, onNodeClick, onNodeAdd 
   return (
     <div className="relative w-full">
       <svg
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none overflow-visible"
         style={{ width: '100%', height: '100%' }}
       >
         {renderConnections()}
