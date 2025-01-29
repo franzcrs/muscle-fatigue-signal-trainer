@@ -28,17 +28,14 @@
   background-clip: content-box;
 } */
 
-/* Hide the default scrollbar for all browsers */
-/* #recent-projects-chart { */
-  /* For Firefox */
-  /* scrollbar-width: none;
-  scrollbar-color: transparent transparent; */
-/* } */
+.hidden-scrollbar {
+  scrollbar-width: none;
+  scrollbar-color: transparent;
+}
 
-/* WebKit browsers (Chrome, Safari, Edge Chromium) */
-/* #recent-projects-chart::-webkit-scrollbar {
+.hidden-scrollbar::-webkit-scrollbar {
   display: none;
-} */
+}
 
 .custom-scrollbar {
   scrollbar-width: auto;
@@ -64,7 +61,3 @@
 .custom-scrollbar::-webkit-scrollbar-corner {
   background: transparent;
 }
-
-.custom-scrollbar>div {
-  padding-right: 8px;
-} 

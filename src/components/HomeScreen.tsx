@@ -1,5 +1,5 @@
 import Logo from "../assets/Muscle Fatigue Signal Trainer.svg?react";
-import CustomYScrollContainer from './CustomYScrollContainer';
+import CustomScrollableContainer from "./CustomScrollableContainer";
 import { Trash2 } from 'lucide-react';
 
 const HomeScreen = () => {
@@ -76,10 +76,12 @@ const HomeScreen = () => {
         Recent projects
       </h3>
 
-      <div
+      <CustomScrollableContainer
         id="recent-projects-chart"
         // className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 min-h-[40dvh] max-h-[45vh] overflow-y-auto"
-        className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 min-h-[273px] max-h-[47vh] overflow-y-auto custom-scrollbar"
+        className="bg-gray-100 rounded-md flex flex-col divide-y divide-gray-200 min-h-[273px] max-h-[47vh]"
+        // scrollbars={true}
+        // enablePan={true}
       >
         <div
           id="recent-projects-header"
@@ -112,7 +114,7 @@ const HomeScreen = () => {
           </div>
         )
         )}
-      </div>
+      </CustomScrollableContainer>
     </div>
   )
 }

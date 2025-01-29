@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import CustomYScrollContainer from './CustomYScrollContainer'
 import { MindMapNode, MindMap } from '../lib/mindmap-comp/MindMap';
 import { createNode, generateNodeId } from '../lib/mindmap';
+import CustomScrollableContainer from './CustomScrollableContainer';
 
 type DataCollectionScreenProps = {
   isActive: boolean;
@@ -49,33 +49,33 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
             <h5 className="font-normal text-xs text-gray-400">
               Roles
             </h5>
-            <CustomYScrollContainer className='bg-gray-100 rounded px-3 py-2 h-[70px] max-h-[70px] space-y-1'>
+            <CustomScrollableContainer className='bg-gray-100 rounded px-3 py-2 h-[70px] max-h-[70px] space-y-1'>
               <h3 className="font-light text-xs text-gray-800">
                 User
               </h3>
               <h3 className="font-light text-xs text-gray-800">
                 Demo
               </h3>
-            </CustomYScrollContainer>
+            </CustomScrollableContainer>
           </div>
           <div className='flex-auto flex flex-col space-y-1'>
             <h5 className="font-normal text-xs text-gray-400">
               Activities
             </h5>
-            <CustomYScrollContainer className='bg-gray-100 rounded px-3 py-2 h-[70px] max-h-[70px] space-y-1'>
+            <CustomScrollableContainer className='bg-gray-100 rounded px-3 py-2 h-[70px] max-h-[70px] space-y-1'>
               <h3 className="font-light text-xs text-gray-800">
                 Max endurance elbow flexion standing
               </h3>
               <h3 className="font-light text-xs text-gray-800">
                 Dynamic endurance bicep curls standing
               </h3>
-            </CustomYScrollContainer>
+            </CustomScrollableContainer>
           </div>
           <div className='flex-auto flex flex-col space-y-1'>
             <h5 className="font-normal text-xs text-gray-400">
               Data files
             </h5>
-            <div className='bg-gray-100 rounded px-3 py-2 h-[70px] max-h-[70px] space-y-1 overflow-y-auto custom-scrollbar'>
+            <CustomScrollableContainer className='bg-gray-100 rounded px-3 py-2 h-[70px] max-h-[70px] space-y-1'>
               <h3 className="font-light text-xs text-gray-800">
                 Emg
               </h3>
@@ -88,7 +88,7 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
               <h3 className="font-light text-xs text-gray-800">
                 Body composition
               </h3>
-            </div>
+            </CustomScrollableContainer>
           </div>
         </div>
       </div>
@@ -98,11 +98,12 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
         </h3>
         <div className='relative bg-gray-100 rounded-md p-2 flex-1'>
           {/* Canvas */}
-          <div
-            className='absolute left-0 top-0 w-full h-full overflow-auto custom-scrollbar'
+          <CustomScrollableContainer
+            className='absolute left-0 top-0 w-full h-full'
+            scrollbars={false}
+            enablePan={true}
           >
-            {/* TODO: Create CustomScrollBarsContainer 
-                TODO: Create project json containing registered instance names
+            {/* TODO: Create project json containing registered instance names
                 TODO: Generate initial nodes reading directories and files with tauri API */}
             <div className='relative inset-20 p-0 pb-20 flex flex-col space-y-16'>
               <MindMap
@@ -116,7 +117,7 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
                 onNodeAdd={handleNodeAdd}
               />
             </div>
-          </div>
+          </CustomScrollableContainer>
         </div>
       </div>
     </div>
