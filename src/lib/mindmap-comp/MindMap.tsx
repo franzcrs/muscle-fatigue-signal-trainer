@@ -52,7 +52,7 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd }: MindMapProps) => {
 
   const renderNode = (node: MindMapNode) => {
     let children = getNodeChildren(node.id);
-    if (!node.id.includes('add-child')) {
+    if (!node.id.includes('add-child') && node.level < 2) {
       const addChildNode: MindMapNode = {
         id: `add-child-${node.id}`,
         content: 'Add Child',
@@ -103,7 +103,7 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd }: MindMapProps) => {
           )} */}
         </div>
         {children.length > 0 && (
-          <div className={`flex flex-col space-y-[32px] ml-16 lg:ml-[100px]`}>
+          <div className={`flex flex-col space-y-[32px] ml-[100px]`}>
             {children.map((child) => renderNode(child))}
           </div>
         )}
@@ -133,11 +133,8 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd }: MindMapProps) => {
   };
 
   return (
-    <div className="relative w-full">
-      <svg
-        className="absolute inset-0 pointer-events-none overflow-visible"
-        style={{ width: '100%', height: '100%' }}
-      >
+    <div className="relative">
+      <svg className="absolute inset-0 pointer-events-none overflow-visible">
         {renderConnections()}
       </svg>
       <div className="relative">

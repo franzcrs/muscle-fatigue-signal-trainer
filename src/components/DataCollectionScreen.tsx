@@ -100,12 +100,12 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
           {/* Canvas */}
           <CustomScrollableContainer
             className='absolute left-0 top-0 w-full h-full'
-            scrollbars={false}
+            scrollbars={true}
             enablePan={true}
           >
             {/* TODO: Create project json containing registered instance names
                 TODO: Generate initial nodes reading directories and files with tauri API */}
-            <div className='relative inset-20 p-0 pb-20 flex flex-col space-y-16'>
+            <div className='relative inset-[100%] p-0 pr-[calc(632px+100%)] h-full overflow-visible flex flex-col space-y-16'>
               <MindMap
                 nodes={nodes}
                 onNodeClick={handleNodeClick}
@@ -116,6 +116,10 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
                 onNodeClick={handleNodeClick}
                 onNodeAdd={handleNodeAdd}
               />
+              <div 
+              style={{ margin: '0' }} 
+              className='min-h-[calc(100%)] invisible select-none'
+              > hidden</div>
             </div>
           </CustomScrollableContainer>
         </div>

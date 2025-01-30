@@ -18,6 +18,8 @@ const CustomScrollableContainer = ({ children, id, className, scrollbars = true,
   const dragStartScrollTop = useRef(0);
   const [cursorGrabbing, setCursorGrabbing] = useState(false);
 
+  const [initialized, setInitialized] = useState(false);
+
   // Handle for the start of drag action
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -57,6 +59,19 @@ const CustomScrollableContainer = ({ children, id, className, scrollbars = true,
     if (!enablePan) { isDragging.current = false; }
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
+    if (containerRef.current && enablePan && !initialized) {
+      const container = containerRef.current;
+      const scrollableWidth = container.scrollWidth - container.clientWidth;
+      // const scrollableHeight = container.scrollHeight - container.clientHeight;
+      // Get the first child's vertical inset value
+      const firstChild = container.firstElementChild as HTMLElement;
+      const firstChildStyle = window.getComputedStyle(firstChild);
+      const firstChildVerticalInset = parseInt(firstChildStyle.inset.split(' ')[0]) || 0;
+      
+      container.scrollLeft = scrollableWidth / 2;
+      container.scrollTop = firstChildVerticalInset - 40;
+      setInitialized(true);
+    }
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
