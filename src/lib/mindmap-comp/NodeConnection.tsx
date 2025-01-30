@@ -21,7 +21,7 @@ export const NodeConnection: React.FC<NodeConnectionProps> = ({
     <path
       d={path}
       fill="none"
-      stroke="#9ca3afbb"
+      stroke="#9ca3afa0" //0.7*255
       strokeWidth="2"
       className="transition-all duration-300 ease-in-out"
     />

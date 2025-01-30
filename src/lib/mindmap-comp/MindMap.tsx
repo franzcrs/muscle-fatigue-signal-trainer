@@ -12,7 +12,7 @@ export type MindMapNode = {
 type MindMapProps = {
   nodes: MindMapNode[];
   onNodeClick: (nodeId: string) => void;
-  onNodeAdd: (parentId: string, level: number) => void;
+  onNodeAdd: (parentId: string | null, level: number) => void;
 }
 
 type NodePosition = {
@@ -78,19 +78,29 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd }: MindMapProps) => {
           {/* Use fixed width/height classes instead of min-w/min-h to ensure rendering */}
           <div
             ref={(el) => (nodeRefs.current[node.id] = el)}
-            className={`text-center flex flex-row items-center justify-center min-w-[144px] h-[20px] bg-white rounded-full shadow-md cursor-pointer hover:shadow-lg transition-shadow`}
-            onClick={() => onNodeClick(node.id)}
+            className={`group text-center flex flex-row items-center justify-center min-w-[144px] h-[20px] rounded-full cursor-pointer transition-all ${node.id.includes('add-child') ? 'bg-gray-100 border-gray-400/70 border-dashed border-2 hover:border-3 hover:scale-105 origin-center' : 'bg-white shadow-md hover:shadow-lg'}`}
+            onClick={node.id.includes('add-child') ? (() => onNodeAdd(node.parentId, node.level)) : (() => onNodeClick(node.id))}
           >
-            <p className='font-light text-[0.7rem] truncate' title={`${node.content}`}>{node.content}</p>
+            <p 
+            className={`font-light text-[0.7rem] truncate transition-opacity ${node.id.includes('add-child') ? 'group-hover:opacity-0 text-gray-400/70' : ''}`} 
+            title={`${node.content}`}
+            >
+              {node.content}
+            </p>
+            {node.id.includes('add-child') && (
+              <Plus 
+              className={`absolute text-gray-400 opacity-0 transition-opacity ${node.id.includes('add-child') ? 'group-hover:opacity-100' : 'hidden'}`} 
+              size={18}/>
+            )}
           </div>
-          {node.level < 3 && (
+          {/* {node.level < 3 && (
             <button
               className="mt-2 p-1 rounded-full bg-gray-100 hover:bg-white/80 transition-colors duration-500 shadow-md hover:shadow-lg"
               onClick={() => onNodeAdd(node.id, node.level + 1)}
             >
               <Plus size={16}/>
             </button>
-          )}
+          )} */}
         </div>
         {children.length > 0 && (
           <div className={`flex flex-col space-y-[32px] ml-16 lg:ml-[100px]`}>

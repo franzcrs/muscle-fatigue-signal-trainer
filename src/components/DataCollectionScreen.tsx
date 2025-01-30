@@ -28,7 +28,7 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
     console.log('Node clicked:', nodeId);
   };
 
-  const handleNodeAdd = (parentId: string, level: number) => {
+  const handleNodeAdd = (parentId: string | null, level: number) => {
     const newNode = createNode(
       generateNodeId(),
       `New Node ${nodes.length + 1}`,
