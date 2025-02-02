@@ -8,20 +8,22 @@ type DataCollectionScreenProps = {
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const initialNodes: MindMapNode[] = [
-  createNode('1', 'Root Node', null, 0),
-  createNode('2', 'Child 1', '1', 1),
-  createNode('3', 'Child 2', '1', 1),
-  createNode('4', 'Subchild 1', '2', 2),
-  createNode('5', 'Subchild 2', '2', 2),
-];
-
 const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenProps) => {
   useEffect(() => {
     console.log('DataCollectionScreen isActive:', isActive)
   }, [isActive])
 
-  const [nodes, setNodes] = useState<MindMapNode[]>(initialNodes);
+  const getInitialNodes = (): MindMapNode[] => {
+    return [
+      createNode('1', 'Root Node', null, 0),
+      createNode('2', 'Child 1', '1', 1),
+      createNode('3', 'Child 2', '1', 1),
+      createNode('4', 'Subchild 1', '2', 2),
+      createNode('5', 'Subchild 2', '3', 2),
+    ];
+  }
+
+  const [nodes, setNodes] = useState<MindMapNode[]>(getInitialNodes());
 
   const handleNodeClick = (nodeId: string) => {
     // You can implement node editing or other interactions here
@@ -110,6 +112,7 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
                 nodes={nodes}
                 onNodeClick={handleNodeClick}
                 onNodeAdd={handleNodeAdd}
+                headers={['Users', 'Activities', 'Data files']}
               />
               <MindMap
                 nodes={nodes}

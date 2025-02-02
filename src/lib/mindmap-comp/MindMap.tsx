@@ -13,6 +13,7 @@ type MindMapProps = {
   nodes: MindMapNode[];
   onNodeClick: (nodeId: string) => void;
   onNodeAdd: (parentId: string | null, level: number) => void;
+  headers?: string[];
 }
 
 type NodePosition = {
@@ -21,7 +22,7 @@ type NodePosition = {
   y: number;
 }
 
-export const MindMap = ({ nodes, onNodeClick, onNodeAdd }: MindMapProps) => {
+export const MindMap = ({ nodes, onNodeClick, onNodeAdd, headers=[] }: MindMapProps) => {
   const [renderedNodes, setRenderedNodes] = useState<MindMapNode[]>(nodes);
   const [nodePositions, setNodePositions] = useState<NodePosition[]>([]);
   const nodeRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -58,7 +59,7 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd }: MindMapProps) => {
         content: 'Add Child',
         parentId: node.id,
         level: node.level + 1
-       }
+      }
       children.push(addChildNode);
     }
     if (!renderedNodes.find((n) => n.id === node.id)) {
@@ -66,7 +67,7 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd }: MindMapProps) => {
     }
     const NODE_WIDTH = 144;
     const NODE_HEIGHT = 20;
-    const HORIZONTAL_SPACING = 80;
+    const HORIZONTAL_SPACING = 100;
     const VERTICAL_SPACING = 32;
 
     return (
@@ -75,22 +76,21 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd }: MindMapProps) => {
         className="flex flex-row items-start"
       >
         <div className="flex flex-col items-center">
-          {/* Use fixed width/height classes instead of min-w/min-h to ensure rendering */}
           <div
             ref={(el) => (nodeRefs.current[node.id] = el)}
             className={`group text-center flex flex-row items-center justify-center min-w-[144px] h-[20px] rounded-full cursor-pointer transition-all ${node.id.includes('add-child') ? 'bg-gray-100 border-gray-400/70 border-dashed border-2 hover:border-3 hover:scale-105 origin-center' : 'bg-white shadow-md hover:shadow-lg'}`}
             onClick={node.id.includes('add-child') ? (() => onNodeAdd(node.parentId, node.level)) : (() => onNodeClick(node.id))}
           >
-            <p 
-            className={`font-light text-[0.7rem] truncate transition-opacity ${node.id.includes('add-child') ? 'group-hover:opacity-0 text-gray-400/70' : ''}`} 
-            title={`${node.content}`}
+            <p
+              className={`font-light text-[0.7rem] truncate transition-opacity ${node.id.includes('add-child') ? 'group-hover:opacity-0 text-gray-400/70' : ''}`}
+              title={`${node.content}`}
             >
               {node.content}
             </p>
             {node.id.includes('add-child') && (
-              <Plus 
-              className={`absolute text-gray-400 opacity-0 transition-opacity ${node.id.includes('add-child') ? 'group-hover:opacity-100' : 'hidden'}`} 
-              size={18}/>
+              <Plus
+                className={`absolute text-gray-400 opacity-0 transition-opacity ${node.id.includes('add-child') ? 'group-hover:opacity-100' : 'hidden'}`}
+                size={18} />
             )}
           </div>
           {/* {node.level < 3 && (
@@ -137,6 +137,17 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd }: MindMapProps) => {
       <svg className="absolute inset-0 pointer-events-none overflow-visible">
         {renderConnections()}
       </svg>
+      <div className='absolute top-[-25px] flex flex-row space-x-[100px]'>
+        <h5 className="font-normal text-xs text-gray-400/70 min-w-[144px]">
+          {headers[0]}
+        </h5>
+        <h5 className="font-normal text-xs text-gray-400/70 min-w-[144px]">
+          {headers[1]}
+        </h5>
+        <h5 className="font-normal text-xs text-gray-400/70 min-w-[144px]">
+          {headers[2]}
+        </h5>
+      </div>
       <div className="relative">
         {nodes
           .filter((node) => node.parentId === null)
