@@ -2,17 +2,23 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { NodeConnection } from './NodeConnection';
 
+const NODE_WIDTH = 134;
+const NODE_WIDTH_LG = 244;
+const NODE_HEIGHT = 20;
+const HORIZONTAL_SPACING = 100;
+const VERTICAL_SPACING = 32;
+
 export type MindMapNode = {
   id: string;
   content: string;
-  parentId: string | null;
+  parentId: string;
   level: number;
 }
 
 type MindMapProps = {
   nodes: MindMapNode[];
   onNodeClick: (nodeId: string) => void;
-  onNodeAdd: (parentId: string | null, level: number) => void;
+  onNodeAdd: (parentId: string, level: number) => void;
   headers?: string[];
 }
 
@@ -22,11 +28,28 @@ type NodePosition = {
   y: number;
 }
 
-export const MindMap = ({ nodes, onNodeClick, onNodeAdd, headers=[] }: MindMapProps) => {
+export const MindMap = ({ nodes, onNodeClick, onNodeAdd, headers = [] }: MindMapProps) => {
   const [renderedNodes, setRenderedNodes] = useState<MindMapNode[]>(nodes);
   const [nodePositions, setNodePositions] = useState<NodePosition[]>([]);
   const nodeRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const positionsOrigin = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+    :root {
+      --node-width: ${NODE_WIDTH}px;
+      --node-width-lg: ${NODE_WIDTH_LG}px;
+      --node-height: ${NODE_HEIGHT}px;
+      --horizontal-spacing: ${HORIZONTAL_SPACING}px;
+      --vertical-spacing: ${VERTICAL_SPACING}px;
+    }`;
+    // Append style to document head
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    }
+  }, []);
 
   useEffect(() => {
     const positions: NodePosition[] = [];
@@ -51,7 +74,7 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd, headers=[] }: MindMapPr
     return nodes.filter((node) => node.parentId === nodeId);
   };
 
-  const renderNode = (node: MindMapNode) => {
+  function renderNode(node: MindMapNode) {
     let children = getNodeChildren(node.id);
     if (!node.id.includes('add-child') && node.level < 2) {
       const addChildNode: MindMapNode = {
@@ -65,10 +88,6 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd, headers=[] }: MindMapPr
     if (!renderedNodes.find((n) => n.id === node.id)) {
       setRenderedNodes([...renderedNodes, node]);
     }
-    const NODE_WIDTH = 144;
-    const NODE_HEIGHT = 20;
-    const HORIZONTAL_SPACING = 100;
-    const VERTICAL_SPACING = 32;
 
     return (
       <div
@@ -78,7 +97,21 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd, headers=[] }: MindMapPr
         <div className="flex flex-col items-center">
           <div
             ref={(el) => (nodeRefs.current[node.id] = el)}
-            className={`group text-center flex flex-row items-center justify-center min-w-[144px] h-[20px] rounded-full cursor-pointer transition-all ${node.id.includes('add-child') ? 'bg-gray-100 border-gray-400/70 border-dashed border-2 hover:border-3 hover:scale-105 origin-center' : 'bg-white shadow-md hover:shadow-lg'}`}
+            // style={node.content.length > 35 ? {
+            //   width: 'var(--node-width-lg)',
+            //   minHeight: 'var(--node-height)'
+            // } : {
+            //   width: 'var(--node-width)',
+            //   minHeight: 'var(--node-height)'
+            // }}
+            style={node.content.length > 35 ? {
+              width: `${NODE_WIDTH_LG}px`,
+              minHeight: `${NODE_HEIGHT}px`
+            } : {
+              width: `${NODE_WIDTH}px`,
+              minHeight: `${NODE_HEIGHT}px`
+            }}
+            className={`group text-center flex flex-row items-center justify-center rounded-full cursor-pointer transition-all ${node.id.includes('add-child') ? 'bg-gray-100 border-gray-400/70 border-dashed border-2 hover:border-3 hover:scale-105 origin-center' : 'bg-white shadow-md hover:shadow-lg'}`}
             onClick={node.id.includes('add-child') ? (() => onNodeAdd(node.parentId, node.level)) : (() => onNodeClick(node.id))}
           >
             <p
@@ -103,7 +136,8 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd, headers=[] }: MindMapPr
           )} */}
         </div>
         {children.length > 0 && (
-          <div className={`flex flex-col space-y-[32px] ml-[100px]`}>
+          <div className={`flex flex-col space-y-[var(--vertical-spacing)] ml-[var(--horizontal-spacing)]`}>
+          {/* <div className={`flex flex-col space-y-[${VERTICAL_SPACING}px] ml-[${HORIZONTAL_SPACING}px]`}> */}
             {children.map((child) => renderNode(child))}
           </div>
         )}
@@ -138,14 +172,15 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd, headers=[] }: MindMapPr
         {renderConnections()}
       </svg>
       <div className='absolute top-[-25px] flex flex-row space-x-[100px]'>
+        {/* TODO: Change the width of the headers according to the width of nodes */}
         <h5 className="font-normal text-xs text-gray-400/70 min-w-[144px]">
-          {headers[0]}
+          {headers[0] || ''}
         </h5>
         <h5 className="font-normal text-xs text-gray-400/70 min-w-[144px]">
-          {headers[1]}
+          {headers[1] || ''}
         </h5>
         <h5 className="font-normal text-xs text-gray-400/70 min-w-[144px]">
-          {headers[2]}
+          {headers[2] || ''}
         </h5>
       </div>
       <div className="relative">

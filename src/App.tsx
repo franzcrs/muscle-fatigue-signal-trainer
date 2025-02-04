@@ -4,7 +4,7 @@ import StepProjectFolder from './components/StepProjectFolder';
 import StepDataCollection from './components/StepDataCollection';
 import DataCollectionScreen from './components/DataCollectionScreen';
 
-const SIDE_BAR_MIN_WIDTH = 250;
+const SIDE_BAR_MIN_WIDTH = 230;
 const SIDE_BAR_MAX_WIDTH = 320;
 const SIDE_BAR_DEFAULT_WIDTH = 280;
 

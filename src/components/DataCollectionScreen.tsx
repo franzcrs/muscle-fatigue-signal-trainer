@@ -8,36 +8,64 @@ type DataCollectionScreenProps = {
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+type MindMapNodes = MindMapNode[];
+
 const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenProps) => {
   useEffect(() => {
     console.log('DataCollectionScreen isActive:', isActive)
   }, [isActive])
 
-  const getInitialNodes = (): MindMapNode[] => {
+  const getMindMapsNodes = (): MindMapNodes[] => {
+    // TODO: Read project folder and generate nodes
+    const nodes_0 = [
+      createNode('0-1', 'User 01', null, 0),
+      createNode('0-2', 'Max endurance elbow flexion standing 01', '0-1', 1),
+      createNode('0-3', 'Max endurance elbow flexion standing 02', '0-1', 1),
+      createNode('0-4', 'Emg.csv', '0-2', 2),
+      createNode('0-5', 'Body_composition.csv', '0-3', 2),
+    ]
+    const nodes_1 = [
+      createNode('1-1', 'User 02', null, 0),
+      createNode('1-2', 'Max endurance elbow flexion standing 01', '1-1', 1),
+      createNode('1-3', 'Dynamic endurance bicep curls standing 01', '1-1', 1),
+      createNode('1-4', 'Emg.csv', '1-2', 2),
+      createNode('1-5', 'Skeleton.csv', '1-2', 2),
+      createNode('1-6', 'Emg.csv', '1-3', 2),
+    ]
     return [
-      createNode('1', 'Root Node', null, 0),
-      createNode('2', 'Child 1', '1', 1),
-      createNode('3', 'Child 2', '1', 1),
-      createNode('4', 'Subchild 1', '2', 2),
-      createNode('5', 'Subchild 2', '3', 2),
+      nodes_0,
+      nodes_1,
     ];
   }
 
-  const [nodes, setNodes] = useState<MindMapNode[]>(getInitialNodes());
+  const [mindMapsNodes, setMindMapsNodes] = useState<MindMapNodes[]>(getMindMapsNodes());
 
   const handleNodeClick = (nodeId: string) => {
     // You can implement node editing or other interactions here
     console.log('Node clicked:', nodeId);
   };
 
-  const handleNodeAdd = (parentId: string | null, level: number) => {
-    const newNode = createNode(
-      generateNodeId(),
-      `New Node ${nodes.length + 1}`,
-      parentId,
-      level
-    );
-    setNodes([...nodes, newNode]);
+  const handleNodeAdd = (parentId: string, level: number) => {
+
+    const updateMindMapsNodes = (mindMaps: MindMapNodes[], parentId: string, level: number): MindMapNodes[] => {
+      const index = parseInt(parentId.split('-')[0]);
+      const newNode = createNode(
+        parentId.split('-')[0] + '-' + generateNodeId(),
+        `New Node ${mindMaps[index].length + 1}`,
+        parentId,
+        level
+      );
+      const updatedMindMapNodes = [...mindMaps[index], newNode];
+      return mindMaps.map((nodes, i) => i === index ? updatedMindMapNodes : nodes);
+    }
+    setMindMapsNodes((previousMindMapsNodes) => updateMindMapsNodes(previousMindMapsNodes, parentId, level));
+    // const newNode = createNode(
+    //   generateNodeId(),
+    //   `New Node ${nodes.length + 1}`,
+    //   parentId,
+    //   level
+    // );
+    // setNodes([...nodes, newNode]);
   };
 
   return (
@@ -108,6 +136,21 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
             {/* TODO: Create project json containing registered instance names
                 TODO: Generate initial nodes reading directories and files with tauri API */}
             <div className='relative inset-[100%] p-0 pr-[calc(632px+100%)] h-full overflow-visible flex flex-col space-y-16'>
+              {mindMapsNodes.map((nodes, index) => (
+                <MindMap
+                  key={index}
+                  nodes={nodes}
+                  onNodeClick={handleNodeClick}
+                  onNodeAdd={handleNodeAdd}
+                  headers={index === 0 ? ['Users', 'Activities', 'Data files'] : undefined}
+                />
+              ))}
+              <div
+                style={{ margin: '0' }}
+                className='min-h-[calc(100%)] invisible select-none'
+              > hidden</div>
+            </div>
+            {/* <div className='relative inset-[100%] p-0 pr-[calc(632px+100%)] h-full overflow-visible flex flex-col space-y-16'>
               <MindMap
                 nodes={nodes}
                 onNodeClick={handleNodeClick}
@@ -119,11 +162,11 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
                 onNodeClick={handleNodeClick}
                 onNodeAdd={handleNodeAdd}
               />
-              <div 
-              style={{ margin: '0' }} 
-              className='min-h-[calc(100%)] invisible select-none'
+              <div
+                style={{ margin: '0' }}
+                className='min-h-[calc(100%)] invisible select-none'
               > hidden</div>
-            </div>
+            </div> */}
           </CustomScrollableContainer>
         </div>
       </div>
