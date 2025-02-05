@@ -171,17 +171,23 @@ export const MindMap = ({ nodes, onNodeClick, onNodeAdd, headers = [] }: MindMap
       <svg className="absolute inset-0 pointer-events-none overflow-visible">
         {renderConnections()}
       </svg>
-      <div className='absolute top-[-25px] flex flex-row space-x-[100px]'>
+      <div className={`absolute top-[-25px] flex flex-row space-x-[var(--horizontal-spacing)]`}>
         {/* TODO: Change the width of the headers according to the width of nodes */}
-        <h5 className="font-normal text-xs text-gray-400/70 min-w-[144px]">
-          {headers[0] || ''}
-        </h5>
-        <h5 className="font-normal text-xs text-gray-400/70 min-w-[144px]">
-          {headers[1] || ''}
-        </h5>
-        <h5 className="font-normal text-xs text-gray-400/70 min-w-[144px]">
-          {headers[2] || ''}
-        </h5>
+        {headers.map((header, index) => (
+          <h5 
+          key={index} 
+          style={nodes
+            .filter((node) => node.level === index)
+            .map((node) => node.content)
+            .reduce((allLong, content) => allLong || content.length > 35, false) ? {
+              width: `${NODE_WIDTH_LG}px`
+            } : {
+              width: `${NODE_WIDTH}px`
+            }}
+          className='font-normal text-xs text-gray-400/70'>
+            {header || ''}
+          </h5>
+        ))}
       </div>
       <div className="relative">
         {nodes

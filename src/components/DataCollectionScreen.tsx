@@ -45,13 +45,25 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
     console.log('Node clicked:', nodeId);
   };
 
-  const handleNodeAdd = (parentId: string, level: number) => {
+  async function promptNewFolder(): Promise<string | null> {
+    const folderName = window.prompt("Please enter a new folder name:");
+    return folderName;
+  }
+
+  const handleNodeAdd = async (parentId: string, level: number) => {
+    const newFolderName = await promptNewFolder();
+    if (newFolderName) {
+      console.log("User entered folder name:", newFolderName);
+      // You can now use newFolderName to create a folder or update state
+    } else {
+      console.log("No folder name was provided.");
+    }
 
     const updateMindMapsNodes = (mindMaps: MindMapNodes[], parentId: string, level: number): MindMapNodes[] => {
       const index = parseInt(parentId.split('-')[0]);
       const newNode = createNode(
         parentId.split('-')[0] + '-' + generateNodeId(),
-        `New Node ${mindMaps[index].length + 1}`,
+        `New Node ${mindMaps[index].length}`,
         parentId,
         level
       );
