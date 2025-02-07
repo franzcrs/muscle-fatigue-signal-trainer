@@ -2,6 +2,28 @@ import React, { useEffect, useState } from 'react'
 import { MindMapNode, MindMap } from '../lib/mindmap-comp/MindMap';
 import { createNode, generateNodeId } from '../lib/mindmap';
 import CustomScrollableContainer from './CustomScrollableContainer';
+import { invoke } from '@tauri-apps/api/core';
+import { save } from '@tauri-apps/plugin-dialog';
+import { resourceDir } from '@tauri-apps/api/path';
+
+async function openInputDialog() {
+  // Resolve the resource directory which is also the root folder of the binary
+  // const resourceDirPath = await resourceDir();
+  // const filePath = save({
+  //   canCreateDirectories: true,
+  //   defaultPath: resourceDirPath + '/new_file.txt',
+  //   title: 'Confirm your project folder',
+  // });
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <div 
+    id="overlay" 
+    style="position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);z-index:1000;"
+    ></div>
+    `);
+  document.body.classList.add('select-none');
+  invoke("show_input_dialog");
+}
 
 type DataCollectionScreenProps = {
   isActive: boolean;
@@ -45,20 +67,21 @@ const DataCollectionScreen = ({ isActive, setIsActive }: DataCollectionScreenPro
     console.log('Node clicked:', nodeId);
   };
 
-  async function promptNewFolder(): Promise<string | null> {
-    const folderName = window.prompt("Please enter a new folder name:");
-    return folderName;
-  }
+  // async function promptNewFolder(): Promise<string | null> {
+  //   const folderName = window.prompt("Please enter a new folder name:");
+  //   return folderName;
+  // }
+  // TODO: create a prompt for the user to enter a new folder name with Tauri
 
   const handleNodeAdd = async (parentId: string, level: number) => {
-    const newFolderName = await promptNewFolder();
-    if (newFolderName) {
-      console.log("User entered folder name:", newFolderName);
-      // You can now use newFolderName to create a folder or update state
-    } else {
-      console.log("No folder name was provided.");
-    }
-
+    // const newFolderName = await promptNewFolder();
+    // if (newFolderName) {
+    //   console.log("User entered folder name:", newFolderName);
+    //   // You can now use newFolderName to create a folder or update state
+    // } else {
+    //   console.log("No folder name was provided.");
+    // }
+    openInputDialog();
     const updateMindMapsNodes = (mindMaps: MindMapNodes[], parentId: string, level: number): MindMapNodes[] => {
       const index = parseInt(parentId.split('-')[0]);
       const newNode = createNode(
