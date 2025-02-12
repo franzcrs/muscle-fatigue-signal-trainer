@@ -3,35 +3,36 @@ use tauri::Manager;
 
 // TODO: Create with tao the new folder dialog
 // TODO: Create with tauri WindowBuilder the new folder dialog
-// TODO: Make the input dialog always recover focus when unfocused
 #[tauri::command]
-async fn show_input_dialog(app_handle: tauri::AppHandle) {
-    // fn show_input_dialog(app_handle: tauri::AppHandle) {
-    // Tauri implementation
+fn show_input_dialog(app_handle: tauri::AppHandle) {
+    /* Tauri-egui implementation */
+
+    /* Tauri implementation */
     let main_window = app_handle.get_window("main").unwrap();
+    // let main_window = app_handle.get_webview_window("main").unwrap();
     // let parent_pos = main_window.outer_position().unwrap(); // Parent window position
     let parent_size = main_window.inner_size().unwrap(); // Parent window size
-    println!(
-        "Parent window size: width: {}, height: {}",
-        parent_size.width, parent_size.height
-    );
-    let child_width = 400.0;
-    let child_height = 200.0;
+    // println!("Parent window size: width: {}, height: {}", parent_size.width, parent_size.height);
+    // Input dialog size
+    let dialog_width = 400.0;
+    let dialog_height = 200.0;
+    // Get the scale factor for calculating the physical position
     let scale_factor = main_window.scale_factor().unwrap();
-    // Calculate centered position
-    let child_x = (parent_size.width as f64 - child_width) / 2.0 / scale_factor;
-    let child_y = (parent_size.height as f64 - child_height) / 2.0 / scale_factor;
-    println!("Calculated child position: x: {}, y: {}", child_x, child_y);
+    // Input dialog position
+    let dialog_x = (parent_size.width as f64 - dialog_width) / 2.0 / scale_factor;
+    let dialog_y = (parent_size.height as f64 - dialog_height) / 2.0 / scale_factor;
+    println!("Input dialog position: x: {}, y: {}", dialog_x, dialog_y);
 
     // To use tauri::window::WindowBuilder::new() we need to set the feature unstable in the Cargo.toml: tauri = { version = "2.2.1", features = ["unstable"] }
+    // let dialog_window = tauri::WebviewWindowBuilder::new(&app_handle, "input_dialog", tauri::WebviewUrl::App("src/input_dialog.html".into()))
     let dialog_window = tauri::window::WindowBuilder::new(&app_handle, "input_dialog")
-        .position(child_x, child_y)
-        .inner_size(child_width, child_height)
+        .position(dialog_x, dialog_y)
+        .inner_size(dialog_width, dialog_height)
         .resizable(false)
         .maximizable(false)
         .minimizable(false)
         .closable(false)
-        .title("Input Dialog")
+        .title("")
         .focused(true)
         .always_on_top(true)
         .content_protected(true)
@@ -40,17 +41,15 @@ async fn show_input_dialog(app_handle: tauri::AppHandle) {
         .unwrap()
         .build()
         .unwrap();
-
+    // Disable all cursor events to block any drag or resize. All cursor events will go through and effects will occur in the parent window
     dialog_window.set_ignore_cursor_events(true).ok();
-    dialog_window
-        .set_title_bar_style(tauri_utils::TitleBarStyle::Transparent)
-        .ok();
+    dialog_window.set_title_bar_style(tauri_utils::TitleBarStyle::Transparent).ok();
 
     dialog_window.on_window_event(move |event| {
       match event {
         tauri::WindowEvent::Focused(false) => {
+          // Parent window will be focused on any click on the dialog window. Only when this happens after loosing focus of the dialog window, bring the focus back to the dialog window
           if app_handle.get_window("main").unwrap().is_focused().unwrap() {
-            println!("Child lost focus, refocusing...");
             app_handle.get_window("input_dialog").unwrap().set_focus().ok();
         }},
           _ => {}, 
@@ -75,7 +74,7 @@ async fn show_input_dialog(app_handle: tauri::AppHandle) {
     //     }
     // })
 
-    // Tao implementation
+    /* Tao implementation */
     // use tao::{
     //   dpi::{LogicalSize,LogicalPosition, PhysicalPosition},
     //   event_loop::{ControlFlow, EventLoop},
@@ -148,6 +147,7 @@ async fn show_input_dialog(app_handle: tauri::AppHandle) {
     //     }
     // });
 }
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()

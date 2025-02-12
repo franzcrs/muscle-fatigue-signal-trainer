@@ -6,7 +6,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { save } from '@tauri-apps/plugin-dialog';
 import { resourceDir } from '@tauri-apps/api/path';
 
-async function openInputDialog() {
+function openInputDialog() {
   // Resolve the resource directory which is also the root folder of the binary
   // const resourceDirPath = await resourceDir();
   // const filePath = save({
